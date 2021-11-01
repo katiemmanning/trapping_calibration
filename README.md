@@ -1,4 +1,4 @@
-# Experimental calibration of trapping methods for addressing bias in insect biodiversity monitoring
+# Experimental calibration of trapping methods for addressing bias in arthropod biodiversity monitoring
 CC-BY 4.0
 ---
 ### Abstract here
