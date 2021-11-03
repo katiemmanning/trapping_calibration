@@ -1,6 +1,7 @@
 # Experimental calibration of trapping methods for addressing bias in arthropod biodiversity monitoring
 CC-BY 4.0
 ---
-### Abstract here
+#### Abstract
+###### Biodiversity monitoring schemes have inherent biases, including the methods used, and it is not uncommon for customized approaches for monitoring to be required in a study. Here, we developed a calibration study to directly examine how researcher trap choice affects observations. Arthropod communities collected in four types of traps: pitfalls, yellow ramp traps, a novel jar ramp trap, and yellow sticky cards, were compared in Northeast Ohio, USA. We found that trapping efficiency and functional groups of arthropods (flying versus ground-crawling) varied by trap type. Pitfalls and jar ramp traps performed similarly for all biodiversity metrics measured, suggesting that jar ramp traps provide a more comparable measurement of ground-crawling arthropod communities to pitfall sampling than the yellow ramp traps and should be considered when pitfall sampling cannot be used. This study illustrates the implications for biodiversity sampling of arthropods in environments with physical constraints on trapping, and the importance of directly comparing adapted methods to established sampling protocol. We suggest that future biodiversity monitoring schemes conduct calibration experiments to provide important information on performance and potential limitations of sampling methodology.
 ---
 ***Contact information*** - kmanni12@kent.edu
