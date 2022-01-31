@@ -1,0 +1,4 @@
+variable,Diptera,Hymenoptera,Hymenoptera_crawling,Hymenoptera_flying,Hemiptera,Coleoptera,Coleoptera_crawling,Coleoptera_flying,Lepidoptera,Orthoptera,Mollusca,Araneae,Thysanoptera,Collembola,Psocodea,Acarina,Opisthopora,Neuroptera
+flying,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+crawling,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE
+include ,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,TRUE,TRUE,TRUE,TRUE,FALSE,TRUE,TRUE,FALSE
