@@ -45,11 +45,11 @@ stressplot(NMDS_order)
 #most.abund<-most.abund[-1]
 #bioind<-as.vector(t(taxa[2,]))
 #bioind<-bioind[-1]
-flying<-as.vector(t(taxa[1,]))
+flying<-as.vector(t(taxa_order[1,]))
 flying<-flying[-1]
-crawling<-as.vector(t(taxa[2,]))
+crawling<-as.vector(t(taxa_order[2,]))
 crawling<-crawling[-1]
-include<-as.vector(t(taxa[3,]))
+include<-as.vector(t(taxa_order[3,]))
 include<-include[-1]
 
 #plot order NMDS
@@ -115,7 +115,7 @@ AIC(richness.model_order)
 #pairwise comparison 
 rich.emm_order<-emmeans(richness.model_order,pairwise~Trap)
 rich.emm_order
-#results: sig difference btw all except jar and pitfall
+#results: sig difference btw all except jar and pitfall (0.07)
 rich.cld_order<-multcomp::cld(rich.emm_order, alpha = 0.05, Letters = LETTERS)
 rich.cld_order
 
@@ -154,7 +154,7 @@ AIC(evenness.model_order)
 #pairwise comparison 
 even.emm_order<-emmeans(evenness.model_order,pairwise~Trap)
 even.emm_order
-#results: no sig diff between jar-ramp (0.9008),jar-sticky (0.1036), ramp-sticky (0.3786); sig btw rest
+#results: no sig diff between jar-pitfall (0.09), jar-ramp (0.9008),jar-sticky (0.1036), ramp-sticky (0.3786); sig btw rest
 even.cld_order<-multcomp::cld(even.emm_order, alpha = 0.05, Letters = LETTERS)
 even.cld_order
 
