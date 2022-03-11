@@ -10,7 +10,7 @@ jar_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_
 
 sticky_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_stickycard_order.csv",na.strings = NULL)
 
-taxa_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Taxa_updated.csv")
+taxa_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Order%20taxa.csv")
 
 #add trap type as a column on each data file
 pitfall_order$Trap="pitfall"
@@ -29,9 +29,9 @@ insects_order <- rbind.fill (pitfallrampjar_order, sticky_order)
 library (vegan)
 
 #Create matrix of environmental variables
-env.matrix_order<-insects_order[c(1:3,18)]
+env.matrix_order<-insects_order[c(1:3,17)]
 #create matrix of community variables
-com.matrix_order<-insects_order[c(4:17)]
+com.matrix_order<-insects_order[c(4:16)]
 
 #ordination by NMDS
 NMDS_order<-metaMDS(com.matrix_order, distance="bray", k=2, autotransform=FALSE, trymax=100)
@@ -41,10 +41,6 @@ stressplot(NMDS_order)
 #order NMDS visualization 
 
 #what taxa to display using "taxa"
-#most.abund<-as.vector(t(taxa[1,]))#greater than 100 caught
-#most.abund<-most.abund[-1]
-#bioind<-as.vector(t(taxa[2,]))
-#bioind<-bioind[-1]
 flying<-as.vector(t(taxa_order[1,]))
 flying<-flying[-1]
 crawling<-as.vector(t(taxa_order[2,]))
@@ -79,24 +75,24 @@ fit
 #P-value greater than 0.05 means assumption has been met
 distances_data<-vegdist(com.matrix_order)
 anova(betadisper(distances_data, env.matrix_order$Trap))
-#P-value = 0.005 -- cannot assume homogeneity of multivariate dispersion
+#P-value = 0.0055 -- cannot assume homogeneity of multivariate dispersion
 
 
 ################
 #calculate order Abundance
-insects.abun_order <- rowSums(insects_order[,4:17])
+insects.abun_order <- rowSums(insects_order[,4:16])
 insects_order$abundance <- insects.abun_order
 
 #calculate order Richness
-insects.rowsums_order <- rowSums(insects_order[,4:17]>0)
+insects.rowsums_order <- rowSums(insects_order[,4:16]>0)
 insects_order$richness <- insects.rowsums_order
 
 #calculate order Shannon diversity
-diversity_order <-diversity(insects_order[,4:17])
+diversity_order <-diversity(insects_order[,4:16])
 insects_order$diversity <-diversity_order
 
 #calculate order Evenness
-evenness_order <-diversity_order/log(specnumber(insects_order[,4:17]))
+evenness_order <-diversity_order/log(specnumber(insects_order[,4:16]))
 insects_order$evenness <- evenness_order
 
 #######
@@ -115,7 +111,7 @@ AIC(richness.model_order)
 #pairwise comparison 
 rich.emm_order<-emmeans(richness.model_order,pairwise~Trap)
 rich.emm_order
-#results: sig difference btw all except jar and pitfall (0.07)
+#results: sig difference btw all except jar and pitfall (0.06)
 rich.cld_order<-multcomp::cld(rich.emm_order, alpha = 0.05, Letters = LETTERS)
 rich.cld_order
 
@@ -128,25 +124,25 @@ AIC(abundance.model_order)
 #pairwise comparison 
 abun.emm_order<-emmeans(abundance.model_order,pairwise~Trap)
 abun.emm_order
-#results: no sig diff in abundance btw jar and pitfall (0.8058); sig btw rest
+#results: no sig diff in abundance btw jar and pitfall (0.8049); sig btw rest
 abun.cld_order<-multcomp::cld(abun.emm_order, alpha = 0.05, Letters = LETTERS)
 abun.cld_order
 
 #order diversity
-##AIC 129
-diversity.model_order<-lmer(diversity ~ Trap + Date+ (1 | Site), data=insects_order)
+##AIC 128 (103 w/o Date)
+diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site), data=insects_order)
 summary(diversity.model_order)
 anova(diversity.model_order)
 AIC(diversity.model_order)
 #pairwise comparison 
 div.emm_order<-emmeans(diversity.model_order,pairwise~Trap)
 div.emm_order
-#results: no sig diff jar-pitfall (0.4317), jar-sticky (0.9258), pitfall-sticky (0.1513); sig between rest
+#results: no sig diff jar-pitfall (0.4022), jar-sticky (0.9249), pitfall-sticky (0.1354); sig between rest
 div.cld_order<-multcomp::cld(div.emm_order, alpha = 0.05, Letters = LETTERS)
 div.cld_order
 
 #order evenness
-##AIC -188
+##AIC -188 (-206 w/o Date)
 evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site), data=insects_order)
 summary(evenness.model_order)
 anova(evenness.model_order)
@@ -154,7 +150,7 @@ AIC(evenness.model_order)
 #pairwise comparison 
 even.emm_order<-emmeans(evenness.model_order,pairwise~Trap)
 even.emm_order
-#results: no sig diff between jar-pitfall (0.09), jar-ramp (0.9008),jar-sticky (0.1036), ramp-sticky (0.3786); sig btw rest
+#results: no sig diff between jar-pitfall (0.0884), jar-ramp (0.9008),jar-sticky (0.1037), ramp-sticky (0.3788); sig btw rest
 even.cld_order<-multcomp::cld(even.emm_order, alpha = 0.05, Letters = LETTERS)
 even.cld_order
 
@@ -278,7 +274,7 @@ j1.r # 13
 #100%
 j2.r <- diversityresult(ramp.com.matrix_order, y=NULL, index = "jack2")
 j2.r # 12.07
-#107%
+#107% --> 100%
 
 #sticky jackknife; richness = 10
 j1.s <- diversityresult(sticky.com.matrix_order, y=NULL, index = "jack1")
@@ -333,15 +329,15 @@ dev.off()
 ############################################################################
 #bring in functional data sets from github
 
-pitfall <- read.csv("",na.strings = NULL)
+pitfall <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_pitfall_functional.csv",na.strings = NULL)
 
-ramp <- read.csv("",na.strings = NULL)
+ramp <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_yellowramp_functional.csv",na.strings = NULL)
 
-jar <- read.csv("",na.strings = NULL)
+jar <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_jarramp_functional.csv",na.strings = NULL)
 
-sticky <- read.csv("",na.strings = NULL)
+sticky <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_stickycard_functional.csv",na.strings = NULL)
 
-taxa <- read.csv("")
+taxa <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Functional%20taxa.csv")
 
 #add trap type as a column on each data file
 pitfall$Trap="pitfall"
@@ -360,22 +356,18 @@ insects <- rbind.fill (pitfallrampjar, sticky)
 library (vegan)
 
 #Create matrix of environmental variables
-env.matrix<-insects[c(1:3,18)]
+env.matrix<-insects[c(1:3,44)]
 #create matrix of community variables
-com.matrix<-insects[c(4:17)]
+com.matrix<-insects[c(4:43)]
 
 #ordination by NMDS
 NMDS<-metaMDS(com.matrix, distance="bray", k=2, autotransform=FALSE, trymax=100)
 stressplot(NMDS)
-#stress=
+#stress=0.15
 
 #functional classification NMDS visualization 
 
 #what taxa to display using "taxa"
-#most.abund<-as.vector(t(taxa[1,]))#greater than 100 caught
-#most.abund<-most.abund[-1]
-#bioind<-as.vector(t(taxa[2,]))
-#bioind<-bioind[-1]
 flying<-as.vector(t(taxa[1,]))
 flying<-flying[-1]
 crawling<-as.vector(t(taxa[2,]))
@@ -404,30 +396,30 @@ ordilabel(NMDS, display="species", select =which (include==TRUE & flying == TRUE
 #bootstrapping and testing for differences between the groups (traps)
 fit<-adonis(com.matrix ~ Trap, data = env.matrix, permutations = 999, method="bray")
 fit
-#P-value = 
+#P-value = 0.001
 
 #check assumption of homogeneity of multivariate dispersion 
 #P-value greater than 0.05 means assumption has been met
-distances_data<-vegdist(com.matrix_order)
-anova(betadisper(distances_data, env.matrix_order$Trap))
-#P-value = 0.005 -- cannot assume homogeneity of multivariate dispersion
+distances_data<-vegdist(com.matrix)
+anova(betadisper(distances_data, env.matrix$Trap))
+#P-value = 9.533e-05 -- cannot assume homogeneity of multivariate dispersion
 
 
 ################
 #calculate Abundance
-insects.abun <- rowSums(insects[,4:17])
+insects.abun <- rowSums(insects[,4:43])
 insects$abundance <- insects.abun
 
 #calculate Richness
-insects.rowsums <- rowSums(insects[,4:17]>0)
+insects.rowsums <- rowSums(insects[,4:43]>0)
 insects$richness <- insects.rowsums
 
 #calculate Shannon diversity
-diversity <-diversity(insects[,4:17])
+diversity <-diversity(insects[,4:43])
 insects$diversity <-diversity
 
 #calculate Evenness
-evenness <-diversity/log(specnumber(insects[,4:17]))
+evenness <-diversity/log(specnumber(insects[,4:43]))
 insects$evenness <- evenness
 
 #######
@@ -438,7 +430,7 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #richness
-##AIC 
+##AIC 721
 richness.model<-lmer(richness ~ Trap + Date + (1 | Site), data=insects)
 summary(richness.model)
 anova(richness.model)
@@ -446,12 +438,12 @@ AIC(richness.model)
 #pairwise comparison 
 rich.emm<-emmeans(richness.model,pairwise~Trap)
 rich.emm
-#results: 
-rich.cld_order<-multcomp::cld(rich.emm, alpha = 0.05, Letters = LETTERS)
-rich.cld_order
+#results: jar-pitfall no sig diff (0.0652), sig dif btw all others
+rich.cld<-multcomp::cld(rich.emm, alpha = 0.05, Letters = LETTERS)
+rich.cld
 
 #abundance
-##AIC 
+##AIC 1795
 abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site), data=insects)
 summary(abundance.model)
 anova(abundance.model)
@@ -459,12 +451,12 @@ AIC(abundance.model)
 #pairwise comparison 
 abun.emm<-emmeans(abundance.model,pairwise~Trap)
 abun.emm
-#results:
+#results: jar-pitfall no sig diff (0.8082), sig dif btw all others
 abun.cld<-multcomp::cld(abun.emm, alpha = 0.05, Letters = LETTERS)
 abun.cld
 
 #diversity
-##AIC
+##AIC 174 (152 w/o Date)
 diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site), data=insects)
 summary(diversity.model)
 anova(diversity.model)
@@ -472,12 +464,12 @@ AIC(diversity.model)
 #pairwise comparison 
 div.emm<-emmeans(diversity.model,pairwise~Trap)
 div.emm
-#results: 
+#results: no sig diff btw jar-pitfall (0.1846), jar-sticky (0.9738), pitfall-sticky (0.0741); sig diff btw all others 
 div.cld<-multcomp::cld(div.emm, alpha = 0.05, Letters = LETTERS)
 div.cld
 
 #evenness
-##AIC 
+##AIC -172 (-193 w/o Date)
 evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site), data=insects)
 summary(evenness.model)
 anova(evenness.model)
@@ -485,7 +477,7 @@ AIC(evenness.model)
 #pairwise comparison 
 even.emm<-emmeans(evenness.model,pairwise~Trap)
 even.emm
-#results: 
+#results: no sig diff btw jar-pitfall (0.2257) or ramp-sticky (0.0965); sig diff btw all others
 even.cld<-multcomp::cld(even.emm, alpha = 0.05, Letters = LETTERS)
 even.cld
 
@@ -539,15 +531,17 @@ evenness.plot
 #Mush order plots together
 library(ggpubr) 
 functionalfigure <- ggarrange(richness.plot, abundance.plot, diversity.plot, evenness.plot,
-                         labels = c("A", "B", "C", "D"),
+                         labels = c("E", "F", "G", "H"),
                          ncol = 2, nrow = 2,
                          common.legend = TRUE, legend = "bottom")
-pdf("function.pdf", height=6, width=8) #height and width in inches
+pdf("functional.pdf", height=6, width=8) #height and width in inches
 functionalfigure
 dev.off()
 
 functionalfigure
 ###
+
+##UPDATE##
 
 #input data
 flying<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/flying.csv")
