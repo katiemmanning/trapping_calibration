@@ -791,13 +791,13 @@ dev.off()
 
 #bring in beetle data sets from github
 
-pitfall_beetle <- read.csv("",na.strings = NULL)
+pitfall_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_pitfall.csv",na.strings = NULL)
 
-ramp_beetle <- read.csv("",na.strings = NULL)
+ramp_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_yellowramp.csv",na.strings = NULL)
 
-jar_beetle <- read.csv("",na.strings = NULL)
+jar_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_jarramp.csv",na.strings = NULL)
 
-sticky_beetle <- read.csv("",na.strings = NULL)
+sticky_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_stickycard.csv",na.strings = NULL)
 
 taxa_beetle <- read.csv("")
 
@@ -818,14 +818,15 @@ beetle <- rbind.fill (pitfallrampjar_beetle, sticky_beetle)
 library (vegan)
 
 #Create matrix of environmental variables
-env.matrix_beetle<-beetle[c(1:3,18)]
+env.matrix_beetle<-beetle[c(1:3,19)]
 #create matrix of community variables
-com.matrix_beetle<-beetle[c(4:17)]
+com.matrix_beetle<-beetle[c(4:18)]
 
 #ordination by NMDS
 NMDS_beetle<-metaMDS(com.matrix_beetle, distance="bray", k=2, autotransform=FALSE, trymax=100)
 stressplot(NMDS_beetle)
-#stress=
+#stress= "nearly zero"
+#INSUFFICENT DATA
 
 #beetle NMDS visualization 
 
@@ -842,6 +843,7 @@ include<-as.vector(t(taxa_beetle[3,]))
 include<-include[-1]
 
 #plot order NMDS
+#Doesn't really work
 plot(NMDS_beetle, disp='sites', type="n")
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
@@ -862,31 +864,31 @@ ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying 
 #bootstrapping and testing for differences between the groups (traps)
 fit<-adonis(com.matrix_beetle ~ Trap, data = env.matrix_beetle, permutations = 999, method="bray")
 fit
-#P-value = 
+#P-value = 0.001
 
 #check assumption of homogeneity of multivariate dispersion 
 #P-value greater than 0.05 means assumption has been met
 distances_data<-vegdist(com.matrix_beetle)
 anova(betadisper(distances_data, env.matrix_beetle$Trap))
-#P-value = 
+#P-value = 0.7987 --- assumes homogeneity
 
 
 ################
 #calculate beetle Abundance
-insects.abun_beetle <- rowSums(insects_beetle[,4:17])
-insects_beetle$abundance <- insects.abun_beetle
+insects.abun_beetle <- rowSums(beetle[,4:18])
+beetle$abundance <- insects.abun_beetle
 
 #calculate beetle Richness
-insects.rowsums_beetle <- rowSums(insects_beetle[,4:17]>0)
-insects_beetle$richness <- insects.rowsums_beetle
+insects.rowsums_beetle <- rowSums(beetle[,4:18]>0)
+beetle$richness <- insects.rowsums_beetle
 
 #calculate beetle Shannon diversity
-diversity_beetle <-diversity(insects_beetle[,4:17])
-insects_beetle$diversity <-diversity_beetle
+diversity_beetle <-diversity(beetle[,4:18])
+beetle$diversity <-diversity_beetle
 
 #calculate beetle Evenness
-evenness_beetle <-diversity_beetle/log(specnumber(insects_beetle[,4:17]))
-insects_beetle$evenness <- evenness_beetle
+evenness_beetle <-diversity_beetle/log(specnumber(beetle[,4:18]))
+beetle$evenness <- evenness_beetle
 
 #######
 #Mixed effects models
@@ -896,7 +898,7 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #beetle richness
-##AIC 
+##AIC 77
 richness.model_beetle<-lmer(richness ~ Trap + Date + (1 | Site), data=beetle)
 summary(richness.model_beetle)
 anova(richness.model_beetle)
@@ -909,7 +911,7 @@ rich.cld_beetle<-multcomp::cld(rich.emm_beetle, alpha = 0.05, Letters = LETTERS)
 rich.cld_beetle
 
 #beetle abundance
-##AIC 
+##AIC 77
 abundance.model_beetle<-lmer(abundance ~ Trap + Date + (1 | Site), data=beetle)
 summary(abundance.model_beetle)
 anova(abundance.model_beetle)
@@ -922,8 +924,8 @@ abun.cld_beetle<-multcomp::cld(abun.emm_beetle, alpha = 0.05, Letters = LETTERS)
 abun.cld_beetle
 
 #beetle diversity
-##AIC 
-diversity.model_beetle<-lmer(diversity ~ Trap + Date+ (1 | Site), data=beetle)
+##AIC 54 (40 w/o date)
+diversity.model_beetle<-lmer(diversity ~ Trap + Date + (1 | Site), data=beetle)
 summary(diversity.model_beetle)
 anova(diversity.model_beetle)
 AIC(diversity.model_beetle)
@@ -935,7 +937,7 @@ div.cld_beetle<-multcomp::cld(div.emm_beetle, alpha = 0.05, Letters = LETTERS)
 div.cld_beetle
 
 #beetle evenness
-##AIC 
+##AIC -193 (-411 w/o date)
 evenness.model_beetle<-lmer(evenness ~ Trap + Date + (1 | Site), data=beetle)
 summary(evenness.model_beetle)
 anova(evenness.model_beetle)
@@ -1005,3 +1007,114 @@ beetlefigure
 dev.off()
 
 beetlefigure
+
+####
+#species accumulation
+library (BiodiversityR)
+library(ggplot2)
+
+#individual curves for each trap type
+pitfall.com.matrix<-pitfall_beetle[c(4:18)]
+pitfall_curve<-accumresult(pitfall.com.matrix, method = "exact", permutations = 1000)
+
+jar.com.matrix<-jar_beetle[c(4:18)]
+jar_curve<-accumresult(jar.com.matrix, method = "exact", permutations = 1000)
+
+ramp.com.matrix<-ramp_beetle[c(4:18)]
+ramp_curve<-accumresult(ramp.com.matrix, method = "exact", permutations = 1000)
+
+sticky.com.matrix<-sticky_beetle[c(4:18)]
+sticky_curve<-accumresult(sticky.com.matrix, method = "exact", permutations = 1000)
+
+#first-order jackknife estimates are based on the number of singletons
+#second-order jackknife estimates are based on the number of singletons and doubletons
+
+#calculates species richness for each sample
+specnumber(com.matrix_beetle) #ranges from 1 to 3
+
+#calculates species richness by treatment (trap)
+specnumber(com.matrix_beetle, groups = beetle$Trap) #jar=3; pitfall=3; ramp=8; sticky=9
+
+#total richness and jackknife
+rich <- diversityresult(com.matrix_beetle, y=NULL, index = "richness")
+rich # 15
+j1 <- diversityresult(com.matrix_beetle, y=NULL, index = "jack1")
+j1 # 18.878788
+#79%
+j2 <- diversityresult(com.matrix_beetle, y=NULL, index = "jack2")
+j2 # 18.996212
+#79%
+
+#jar jackknife; richness = 3
+j1.j <- diversityresult(jar.com.matrix, y=NULL, index = "jack1")
+j1.j # 3.8333333
+#78%
+j2.j <- diversityresult(jar.com.matrix, y=NULL, index = "jack2")
+j2.j #3.9666667
+#76%
+
+#pitfall jackknife; richness = 3
+j1.p <- diversityresult(pitfall.com.matrix, y=NULL, index = "jack1")
+j1.p # 3.8333333
+#78%
+j2.p <- diversityresult(pitfall.com.matrix, y=NULL, index = "jack2")
+j2.p # 3.9666667
+#76%
+
+#ramp jackknife; richness = 8
+j1.r <- diversityresult(ramp.com.matrix, y=NULL, index = "jack1")
+j1.r # 11.555556
+#69%
+j2.r <- diversityresult(ramp.com.matrix, y=NULL, index = "jack2")
+j2.r # 13.305556
+#60%
+
+#sticky jackknife; richness = 9
+j1.s <- diversityresult(sticky.com.matrix, y=NULL, index = "jack1")
+j1.s # 11.75
+#77%
+j2.s <- diversityresult(sticky.com.matrix, y=NULL, index = "jack2")
+j2.s # 11.219697
+#80%
+
+#BiodiversityR::accumcomp
+Accum.1 <- accumcomp(com.matrix_beetle, y=env.matrix_beetle, factor='Trap', 
+                     method='random', conditioned=FALSE, plotit=FALSE)
+Accum.1
+
+#BiodiversityR::accumcomp.long
+accum.long1 <- accumcomp.long(Accum.1, ci=NA, label.freq=5)
+head(accum.long1)
+
+#plot
+#empty canvas
+BioR.theme <- theme(
+  panel.background = element_blank(),
+  panel.border = element_blank(),
+  panel.grid = element_blank(),
+  axis.line = element_line("gray25"),
+  text = element_text(size = 12),
+  axis.text = element_text(size = 10, colour = "gray25"),
+  axis.title = element_text(size = 14, colour = "gray25"),
+  legend.title = element_text(size = 14),
+  legend.text = element_text(size = 14),
+  legend.key = element_blank())
+
+beetle_accum <- ggplot(data=accum.long1, aes(x = Sites, y = Richness, ymax = UPR, ymin = LWR)) + 
+  scale_x_continuous(expand=c(0, 1), sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
+  scale_color_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
+  scale_shape_manual(values=c(19,17,15,25))+
+  geom_line(aes(colour=Grouping), size=0.1) +
+  geom_ribbon(aes(colour=Grouping, fill=after_scale(alpha(colour, 0.3))), 
+              show.legend=FALSE, linetype = 0) + 
+  geom_point(data=subset(accum.long1, labelit==TRUE), 
+             aes(colour=Grouping, shape=Grouping), size=3) +
+  BioR.theme +
+  labs(x = "Number of samples", y = "Richness", colour = "Trap", shape = "Trap")
+beetle_accum
+
+pdf("beetle_accum.pdf", height=6, width=8) #height and width in inches
+beetle_accum
+dev.off()
+
