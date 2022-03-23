@@ -29,9 +29,9 @@ insects_order <- rbind.fill (pitfallrampjar_order, sticky_order)
 library (vegan)
 
 #Create matrix of environmental variables
-env.matrix_order<-insects_order[c(1:3,17)]
+env.matrix_order<-insects_order[c(1:3,16)]
 #create matrix of community variables
-com.matrix_order<-insects_order[c(4:16)]
+com.matrix_order<-insects_order[c(4:15)]
 
 #ordination by NMDS
 NMDS_order<-metaMDS(com.matrix_order, distance="bray", k=2, autotransform=FALSE, trymax=100)
