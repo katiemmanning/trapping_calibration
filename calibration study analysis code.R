@@ -799,7 +799,7 @@ jar_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping
 
 sticky_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_stickycard.csv",na.strings = NULL)
 
-taxa_beetle <- read.csv("")
+#taxa_beetle <- read.csv("")
 
 #add trap type as a column on each data file
 pitfall_beetle$Trap="pitfall"
@@ -856,7 +856,7 @@ points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="jar")
 points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="ramp"), pch=15, col="#F0E442")
 points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="sticky"), pch=25, col="#CC79A7")
 #add legend
-legend(1.46,1.45, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+legend(5,5, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
 #add taxa as text
 ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
