@@ -75,24 +75,24 @@ fit
 #P-value greater than 0.05 means assumption has been met
 distances_data<-vegdist(com.matrix_order)
 anova(betadisper(distances_data, env.matrix_order$Trap))
-#P-value = 0.0055 -- cannot assume homogeneity of multivariate dispersion
+#P-value = 0.005918 -- cannot assume homogeneity of multivariate dispersion
 
 
 ################
 #calculate order Abundance
-insects.abun_order <- rowSums(insects_order[,4:16])
+insects.abun_order <- rowSums(insects_order[,4:15])
 insects_order$abundance <- insects.abun_order
 
 #calculate order Richness
-insects.rowsums_order <- rowSums(insects_order[,4:16]>0)
+insects.rowsums_order <- rowSums(insects_order[,4:15]>0)
 insects_order$richness <- insects.rowsums_order
 
 #calculate order Shannon diversity
-diversity_order <-diversity(insects_order[,4:16])
+diversity_order <-diversity(insects_order[,4:15])
 insects_order$diversity <-diversity_order
 
 #calculate order Evenness
-evenness_order <-diversity_order/log(specnumber(insects_order[,4:16]))
+evenness_order <-diversity_order/log(specnumber(insects_order[,4:15]))
 insects_order$evenness <- evenness_order
 
 #######
@@ -111,7 +111,7 @@ AIC(richness.model_order)
 #pairwise comparison 
 rich.emm_order<-emmeans(richness.model_order,pairwise~Trap)
 rich.emm_order
-#results: sig difference btw all except jar and pitfall (0.06)
+#results: sig difference btw all
 rich.cld_order<-multcomp::cld(rich.emm_order, alpha = 0.05, Letters = LETTERS)
 rich.cld_order
 
@@ -124,7 +124,7 @@ AIC(abundance.model_order)
 #pairwise comparison 
 abun.emm_order<-emmeans(abundance.model_order,pairwise~Trap)
 abun.emm_order
-#results: no sig diff in abundance btw jar and pitfall (0.8049); sig btw rest
+#results: no sig diff in abundance btw jar and pitfall (0.8055); sig btw rest
 abun.cld_order<-multcomp::cld(abun.emm_order, alpha = 0.05, Letters = LETTERS)
 abun.cld_order
 
@@ -137,12 +137,12 @@ AIC(diversity.model_order)
 #pairwise comparison 
 div.emm_order<-emmeans(diversity.model_order,pairwise~Trap)
 div.emm_order
-#results: no sig diff jar-pitfall (0.4022), jar-sticky (0.9249), pitfall-sticky (0.1354); sig between rest
+#results: no sig diff jar-pitfall (0.4304), jar-sticky (0.8797), pitfall-sticky (0.1163); sig between rest
 div.cld_order<-multcomp::cld(div.emm_order, alpha = 0.05, Letters = LETTERS)
 div.cld_order
 
 #order evenness
-##AIC -188 (-206 w/o Date)
+##AIC -186 (-206 w/o Date)
 evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site), data=insects_order)
 summary(evenness.model_order)
 anova(evenness.model_order)
@@ -150,7 +150,7 @@ AIC(evenness.model_order)
 #pairwise comparison 
 even.emm_order<-emmeans(evenness.model_order,pairwise~Trap)
 even.emm_order
-#results: no sig diff between jar-pitfall (0.0884), jar-ramp (0.9008),jar-sticky (0.1037), ramp-sticky (0.3788); sig btw rest
+#results: no sig diff between jar-pitfall (0.1139), jar-ramp (0.8769),jar-sticky (0.0743), ramp-sticky (0.3328); sig btw rest
 even.cld_order<-multcomp::cld(even.emm_order, alpha = 0.05, Letters = LETTERS)
 even.cld_order
 
@@ -221,16 +221,16 @@ library (BiodiversityR)
 library(ggplot2)
 
 #individual curves for each trap type
-pitfall.com.matrix_order<-pitfall_order[c(4:17)]
+pitfall.com.matrix_order<-pitfall_order[c(4:15)]
 pitfall_curve_order<-accumresult(pitfall.com.matrix_order, method = "exact", permutations = 1000)
 
-jar.com.matrix_order<-jar_order[c(4:17)]
+jar.com.matrix_order<-jar_order[c(4:15)]
 jar_curve_order<-accumresult(jar.com.matrix_order, method = "exact", permutations = 1000)
 
-ramp.com.matrix_order<-ramp_order[c(4:17)]
+ramp.com.matrix_order<-ramp_order[c(4:15)]
 ramp_curve_order<-accumresult(ramp.com.matrix_order, method = "exact", permutations = 1000)
 
-sticky.com.matrix_order<-sticky_order[c(4:17)]
+sticky.com.matrix_order<-sticky_order[c(4:15)]
 sticky_curve_order<-accumresult(sticky.com.matrix_order, method = "exact", permutations = 1000)
 
 #first-order jackknife estimates are based on the number of singletons
@@ -240,41 +240,41 @@ sticky_curve_order<-accumresult(sticky.com.matrix_order, method = "exact", permu
 specnumber(com.matrix_order) #ranges from 1 to 10
 
 #calculates order richness by treatment (trap)
-specnumber(com.matrix_order, groups = insects_order$Trap) #jar=13; pitfall=11; ramp=13; sticky=10
+specnumber(com.matrix_order, groups = insects_order$Trap) #jar=12; pitfall=9; ramp=12; sticky=10
 
 #total richness and jackknife
 rich <- diversityresult(com.matrix_order, y=NULL, index = "richness")
-rich # 14
+rich # 12
 j1 <- diversityresult(com.matrix_order, y=NULL, index = "jack1")
-j1 # 14.99
-#93%
+j1 # 12
+#100%
 j2 <- diversityresult(com.matrix_order, y=NULL, index = "jack2")
-j2 # 15.98
-#88%
+j2 # 12
+#100%
 
-#jar jackknife; richness = 13
+#jar jackknife; richness = 12
 j1.j <- diversityresult(jar.com.matrix_order, y=NULL, index = "jack1")
-j1.j # 14.95
-#87%
+j1.j # 13.952381
+#86%
 j2.j <- diversityresult(jar.com.matrix_order, y=NULL, index = "jack2")
-j2.j # 14.99
-#87%
+j2.j # 14.927991
+#80%
 
-#pitfall jackknife; richness = 11
+#pitfall jackknife; richness = 9
 j1.p <- diversityresult(pitfall.com.matrix_order, y=NULL, index = "jack1")
-j1.p # 12.95
-#85%
+j1.p # 9.974359
+#90%
 j2.p <- diversityresult(pitfall.com.matrix_order, y=NULL, index = "jack2")
-j2.p # 13.92
-#79%
+j2.p # 10.923077
+#82%
 
-#ramp jackknife; richness = 13
+#ramp jackknife; richness = 12
 j1.r <- diversityresult(ramp.com.matrix_order, y=NULL, index = "jack1")
-j1.r # 13
+j1.r # 12
 #100%
 j2.r <- diversityresult(ramp.com.matrix_order, y=NULL, index = "jack2")
-j2.r # 12.07
-#107% --> 100%
+j2.r # 11.070848
+#108% --> 100%
 
 #sticky jackknife; richness = 10
 j1.s <- diversityresult(sticky.com.matrix_order, y=NULL, index = "jack1")
@@ -356,9 +356,9 @@ insects <- rbind.fill (pitfallrampjar, sticky)
 library (vegan)
 
 #Create matrix of environmental variables
-env.matrix<-insects[c(1:3,44)]
+env.matrix<-insects[c(1:3,43)]
 #create matrix of community variables
-com.matrix<-insects[c(4:43)]
+com.matrix<-insects[c(4:42)]
 
 #ordination by NMDS
 NMDS<-metaMDS(com.matrix, distance="bray", k=2, autotransform=FALSE, trymax=100)
@@ -407,19 +407,19 @@ anova(betadisper(distances_data, env.matrix$Trap))
 
 ################
 #calculate Abundance
-insects.abun <- rowSums(insects[,4:43])
+insects.abun <- rowSums(insects[,4:42])
 insects$abundance <- insects.abun
 
 #calculate Richness
-insects.rowsums <- rowSums(insects[,4:43]>0)
+insects.rowsums <- rowSums(insects[,4:42]>0)
 insects$richness <- insects.rowsums
 
 #calculate Shannon diversity
-diversity <-diversity(insects[,4:43])
+diversity <-diversity(insects[,4:42])
 insects$diversity <-diversity
 
 #calculate Evenness
-evenness <-diversity/log(specnumber(insects[,4:43]))
+evenness <-diversity/log(specnumber(insects[,4:42]))
 insects$evenness <- evenness
 
 #######
@@ -430,7 +430,7 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #richness
-##AIC 721
+##AIC 718
 richness.model<-lmer(richness ~ Trap + Date + (1 | Site), data=insects)
 summary(richness.model)
 anova(richness.model)
@@ -438,7 +438,7 @@ AIC(richness.model)
 #pairwise comparison 
 rich.emm<-emmeans(richness.model,pairwise~Trap)
 rich.emm
-#results: jar-pitfall no sig diff (0.0652), sig dif btw all others
+#results: jar-pitfall no sig diff (0.0610), sig dif btw all others
 rich.cld<-multcomp::cld(rich.emm, alpha = 0.05, Letters = LETTERS)
 rich.cld
 
@@ -451,12 +451,12 @@ AIC(abundance.model)
 #pairwise comparison 
 abun.emm<-emmeans(abundance.model,pairwise~Trap)
 abun.emm
-#results: jar-pitfall no sig diff (0.8082), sig dif btw all others
+#results: jar-pitfall no sig diff (0.8089), sig dif btw all others
 abun.cld<-multcomp::cld(abun.emm, alpha = 0.05, Letters = LETTERS)
 abun.cld
 
 #diversity
-##AIC 174 (152 w/o Date)
+##AIC 175 (152 w/o Date)
 diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site), data=insects)
 summary(diversity.model)
 anova(diversity.model)
@@ -464,7 +464,7 @@ AIC(diversity.model)
 #pairwise comparison 
 div.emm<-emmeans(diversity.model,pairwise~Trap)
 div.emm
-#results: no sig diff btw jar-pitfall (0.1846), jar-sticky (0.9738), pitfall-sticky (0.0741); sig diff btw all others 
+#results: no sig diff btw jar-pitfall (0.2016), jar-sticky (0.9540), pitfall-sticky (0.0661); sig diff btw all others 
 div.cld<-multcomp::cld(div.emm, alpha = 0.05, Letters = LETTERS)
 div.cld
 
@@ -477,7 +477,7 @@ AIC(evenness.model)
 #pairwise comparison 
 even.emm<-emmeans(evenness.model,pairwise~Trap)
 even.emm
-#results: no sig diff btw jar-pitfall (0.2257) or ramp-sticky (0.0965); sig diff btw all others
+#results: no sig diff btw jar-pitfall (0.2851) or ramp-sticky (0.0974); sig diff btw all others
 even.cld<-multcomp::cld(even.emm, alpha = 0.05, Letters = LETTERS)
 even.cld
 
@@ -575,7 +575,6 @@ abun_f.emm
 #results: sig diff btw everything except jar-pitfall (0.9644) 
 abun_f.cld<-multcomp::cld(abun_f.emm, alpha = 0.05, Letters = LETTERS)
 abun_f.cld
-
 
 #abundance model for crawling arthropods
 #AIC = 1439
@@ -682,68 +681,68 @@ library (BiodiversityR)
 library(ggplot2)
 
 #individual curves for each trap type
-pitfall.com.matrix<-pitfall[c(4:52)]
+pitfall.com.matrix<-pitfall[c(4:42)]
 pitfall_curve<-accumresult(pitfall.com.matrix, method = "exact", permutations = 1000)
 
-jar.com.matrix<-jar[c(4:52)]
+jar.com.matrix<-jar[c(4:42)]
 jar_curve<-accumresult(jar.com.matrix, method = "exact", permutations = 1000)
 
-ramp.com.matrix<-ramp[c(4:52)]
+ramp.com.matrix<-ramp[c(4:42)]
 ramp_curve<-accumresult(ramp.com.matrix, method = "exact", permutations = 1000)
 
-sticky.com.matrix<-sticky[c(4:52)]
+sticky.com.matrix<-sticky[c(4:42)]
 sticky_curve<-accumresult(sticky.com.matrix, method = "exact", permutations = 1000)
 
 #first-order jackknife estimates are based on the number of singletons
 #second-order jackknife estimates are based on the number of singletons and doubletons
 
 #calculates species richness for each sample
-specnumber(com.matrix) #ranges from 1 to 23
+specnumber(com.matrix) #ranges from 1 to 17
 
 #calculates species richness by treatment (trap)
-specnumber(com.matrix, groups = insects$Trap) #jar=32; pitfall=27; ramp=43; sticky=36
+specnumber(com.matrix, groups = insects$Trap) #jar=26; pitfall=21; ramp=35; sticky=31
 
 #total richness and jackknife
 rich <- diversityresult(com.matrix, y=NULL, index = "richness")
-rich # 49
+rich # 39
 j1 <- diversityresult(com.matrix, y=NULL, index = "jack1")
-j1 # 55.957576
-#88%
+j1 # 43.969697
+#89%
 j2 <- diversityresult(com.matrix, y=NULL, index = "jack2")
-j2 # 57.963452
-#85%
+j2 # 44.98167
+#87%
 
-#jar jackknife; richness = 32
+#jar jackknife; richness = 26
 j1.j <- diversityresult(jar.com.matrix, y=NULL, index = "jack1")
-j1.j # 39.809524
-#80%
+j1.j # 32.833333
+#79%
 j2.j <- diversityresult(jar.com.matrix, y=NULL, index = "jack2")
-j2.j # 41.853659
-#76%
+j2.j # 35.783391
+#73%
 
-#pitfall jackknife; richness = 27
+#pitfall jackknife; richness = 21
 j1.p <- diversityresult(pitfall.com.matrix, y=NULL, index = "jack1")
-j1.p # 32.846154
-#82%
+j1.p # 24.897436
+#84%
 j2.p <- diversityresult(pitfall.com.matrix, y=NULL, index = "jack2")
-j2.p # 32.995951
-#82%
-
-#ramp jackknife; richness = 43
-j1.r <- diversityresult(ramp.com.matrix, y=NULL, index = "jack1")
-j1.r # 52.761905
+j2.p # 25.921053
 #81%
-j2.r <- diversityresult(ramp.com.matrix, y=NULL, index = "jack2")
-j2.r # 60.42741
-#71%
 
-#sticky jackknife; richness = 36
+#ramp jackknife; richness = 35
+j1.r <- diversityresult(ramp.com.matrix, y=NULL, index = "jack1")
+j1.r # 41.833333
+#84%
+j2.r <- diversityresult(ramp.com.matrix, y=NULL, index = "jack2")
+j2.r # 46.641696
+#75%
+
+#sticky jackknife; richness = 31
 j1.s <- diversityresult(sticky.com.matrix, y=NULL, index = "jack1")
-j1.s # 42.833333
+j1.s # 36.857143
 #84%
 j2.s <- diversityresult(sticky.com.matrix, y=NULL, index = "jack2")
-j2.s # 46.712544
-#77%
+j2.s # 39.783972
+#78%
 
 #BiodiversityR::accumcomp
 Accum.1 <- accumcomp(com.matrix, y=env.matrix, factor='Trap', 
@@ -864,7 +863,7 @@ ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying 
 #bootstrapping and testing for differences between the groups (traps)
 fit<-adonis(com.matrix_beetle ~ Trap, data = env.matrix_beetle, permutations = 999, method="bray")
 fit
-#P-value = 0.001
+#P-value = 0.002
 
 #check assumption of homogeneity of multivariate dispersion 
 #P-value greater than 0.05 means assumption has been met
