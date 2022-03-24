@@ -307,7 +307,7 @@ BioR.theme <- theme(
   legend.text = element_text(size = 14),
   legend.key = element_blank())
 
-order.accum <- ggplot(data=accum.long1_order, aes(x = Sites, y = Richness, ymax = UPR, ymin = LWR)) + 
+order_accum <- ggplot(data=accum.long1_order, aes(x = Sites, y = Richness, ymax = UPR, ymin = LWR)) + 
   scale_x_continuous(expand=c(0, 1), sec.axis = dup_axis(labels=NULL, name=NULL)) +
   scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
   scale_color_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
@@ -318,11 +318,11 @@ order.accum <- ggplot(data=accum.long1_order, aes(x = Sites, y = Richness, ymax 
   geom_point(data=subset(accum.long1_order, labelit==TRUE), 
              aes(colour=Grouping, shape=Grouping), size=3) +
   BioR.theme +
-  labs(x = "Number of samples", y = "Richness", colour = "Trap", shape = "Trap")
-order.accum
+  labs(x = "", y = "Richness", colour = "Trap", shape = "Trap")
+order_accum
 
-pdf("order.accum.pdf", height=6, width=8) #height and width in inches
-order.accum
+pdf("order_accum.pdf", height=6, width=8) #height and width in inches
+order_accum
 dev.off()
 
 
@@ -489,7 +489,7 @@ abundance.plot<-ggplot(insects, aes(x =Trap, y = abundance, fill=Trap))+
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(x="", y="Abundance (log10)")+
+  labs(x="", y="")+
   scale_y_continuous(trans="log10")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=abun.cld, aes(y = 600, label = .group))
@@ -501,7 +501,7 @@ richness.plot<-ggplot(insects, aes(x =Trap, y = richness, fill=Trap))+
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(x="", y="Richness")+
+  labs(x="", y="")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=rich.cld, aes(y = 25, label = .group))
 richness.plot
@@ -512,7 +512,7 @@ diversity.plot<-ggplot(insects, aes(x =Trap, y = diversity, fill=Trap))+
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(x="", y="Shannon Diversity")+
+  labs(x="", y="")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=div.cld, aes(y = 2.5, label = .group))
 diversity.plot
@@ -523,7 +523,7 @@ evenness.plot<-ggplot(insects, aes(x =Trap, y = evenness, fill=Trap))+
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(x="", y="Evenness")+
+  labs(x="", y="")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=even.cld, aes(y = 1.2, label = .group))
 evenness.plot
@@ -745,13 +745,13 @@ j2.s # 39.783972
 #78%
 
 #BiodiversityR::accumcomp
-Accum.1 <- accumcomp(com.matrix, y=env.matrix, factor='Trap', 
+Accum.1_functional <- accumcomp(com.matrix, y=env.matrix, factor='Trap', 
                      method='random', conditioned=FALSE, plotit=FALSE)
-Accum.1
+Accum.1_functional
 
 #BiodiversityR::accumcomp.long
-accum.long1 <- accumcomp.long(Accum.1, ci=NA, label.freq=5)
-head(accum.long1)
+accum.long1_functional <- accumcomp.long(Accum.1_functional, ci=NA, label.freq=5)
+head(accum.long1_functional)
 
 #plot
 #empty canvas
@@ -767,7 +767,7 @@ BioR.theme <- theme(
   legend.text = element_text(size = 14),
   legend.key = element_blank())
 
-figure5 <- ggplot(data=accum.long1, aes(x = Sites, y = Richness, ymax = UPR, ymin = LWR)) + 
+functional_accum <- ggplot(data=accum.long1_functional, aes(x = Sites, y = Richness, ymax = UPR, ymin = LWR)) + 
   scale_x_continuous(expand=c(0, 1), sec.axis = dup_axis(labels=NULL, name=NULL)) +
   scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
   scale_color_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
@@ -775,14 +775,14 @@ figure5 <- ggplot(data=accum.long1, aes(x = Sites, y = Richness, ymax = UPR, ymi
   geom_line(aes(colour=Grouping), size=0.1) +
   geom_ribbon(aes(colour=Grouping, fill=after_scale(alpha(colour, 0.3))), 
               show.legend=FALSE, linetype = 0) + 
-  geom_point(data=subset(accum.long1, labelit==TRUE), 
+  geom_point(data=subset(accum.long1_functional, labelit==TRUE), 
              aes(colour=Grouping, shape=Grouping), size=3) +
   BioR.theme +
-  labs(x = "Number of samples", y = "Richness", colour = "Trap", shape = "Trap")
-figure5
+  labs(x = "", y = "", colour = "Trap", shape = "Trap")
+functional_accum
 
-pdf("Figure 5.pdf", height=6, width=8) #height and width in inches
-figure5
+pdf("functional_accum.pdf", height=6, width=8) #height and width in inches
+functional_accum
 dev.off()
 
 ########################################################################
@@ -857,8 +857,8 @@ points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="stick
 #add legend
 legend(5,5, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
 #add taxa as text
-ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
-ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
+#ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
+#ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
 
 #bootstrapping and testing for differences between the groups (traps)
 fit<-adonis(com.matrix_beetle ~ Trap, data = env.matrix_beetle, permutations = 999, method="bray")
@@ -956,7 +956,7 @@ abundance.plot_beetle<-ggplot(beetle, aes(x =Trap, y = abundance, fill=Trap))+
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(x="", y="Abundance (log10)")+
+  labs(x="", y="")+
   scale_y_continuous(trans="log10")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=abun.cld_beetle, aes(y = 600, label = .group))
@@ -968,7 +968,7 @@ richness.plot_beetle<-ggplot(beetle, aes(x =Trap, y = richness, fill=Trap))+
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(x="", y="Richness")+
+  labs(x="", y="")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=rich.cld_beetle, aes(y = 25, label = .group))
 richness.plot_beetle
@@ -979,7 +979,7 @@ diversity.plot_beetle<-ggplot(beetle, aes(x =Trap, y = diversity, fill=Trap))+
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(x="", y="Shannon Diversity")+
+  labs(x="", y="")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=div.cld_beetle, aes(y = 2.5, label = .group))
 diversity.plot_beetle
@@ -990,7 +990,7 @@ evenness.plot_beetle<-ggplot(beetle, aes(x =Trap, y = evenness, fill=Trap))+
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(x="", y="Evenness")+
+  labs(x="", y="")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=even.cld_beetle, aes(y = 1.2, label = .group))
 evenness.plot_beetle
@@ -1077,13 +1077,13 @@ j2.s # 11.219697
 #80%
 
 #BiodiversityR::accumcomp
-Accum.1 <- accumcomp(com.matrix_beetle, y=env.matrix_beetle, factor='Trap', 
+Accum.1_beetle <- accumcomp(com.matrix_beetle, y=env.matrix_beetle, factor='Trap', 
                      method='random', conditioned=FALSE, plotit=FALSE)
-Accum.1
+Accum.1_beetle
 
 #BiodiversityR::accumcomp.long
-accum.long1 <- accumcomp.long(Accum.1, ci=NA, label.freq=5)
-head(accum.long1)
+accum.long1_beetle <- accumcomp.long(Accum.1_beetle, ci=NA, label.freq=5)
+head(accum.long1_beetle)
 
 #plot
 #empty canvas
@@ -1099,7 +1099,7 @@ BioR.theme <- theme(
   legend.text = element_text(size = 14),
   legend.key = element_blank())
 
-beetle_accum <- ggplot(data=accum.long1, aes(x = Sites, y = Richness, ymax = UPR, ymin = LWR)) + 
+beetle_accum <- ggplot(data=accum.long1_beetle, aes(x = Sites, y = Richness, ymax = UPR, ymin = LWR)) + 
   scale_x_continuous(expand=c(0, 1), sec.axis = dup_axis(labels=NULL, name=NULL)) +
   scale_y_continuous(sec.axis = dup_axis(labels=NULL, name=NULL)) +
   scale_color_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
@@ -1107,13 +1107,124 @@ beetle_accum <- ggplot(data=accum.long1, aes(x = Sites, y = Richness, ymax = UPR
   geom_line(aes(colour=Grouping), size=0.1) +
   geom_ribbon(aes(colour=Grouping, fill=after_scale(alpha(colour, 0.3))), 
               show.legend=FALSE, linetype = 0) + 
-  geom_point(data=subset(accum.long1, labelit==TRUE), 
+  geom_point(data=subset(accum.long1_beetle, labelit==TRUE), 
              aes(colour=Grouping, shape=Grouping), size=3) +
   BioR.theme +
-  labs(x = "Number of samples", y = "Richness", colour = "Trap", shape = "Trap")
+  labs(x = "Number of samples", y = "", colour = "Trap", shape = "Trap")
 beetle_accum
 
 pdf("beetle_accum.pdf", height=6, width=8) #height and width in inches
 beetle_accum
 dev.off()
 
+#######
+#manuscript figures
+
+#Figure 1 - trap photos
+
+#Figure 2 - NMDSs
+
+#a - order
+plot(NMDS_order, disp='sites', type="n")
+#add ellipsoids with ordiellipse
+ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
+ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
+ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#F0E442",kind="sd", conf=0.95, label=FALSE, show.groups = "ramp") 
+ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#CC79A7",kind="sd", conf=0.95, label=FALSE, show.groups = "sticky")
+#display ground trap data as solid shapes - pitfall=circle, ramp trap=square, jar=triangle, flying trap as triangle outline
+points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="pitfall"),pch=19, col="#E69F00")
+points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="jar"), pch=17, col="#009E73")
+points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="ramp"), pch=15, col="#F0E442")
+points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="sticky"), pch=25, col="#CC79A7")
+#add legend
+legend(2.2,1.45, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+#add insect taxa as text
+ordilabel(NMDS_order, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
+ordilabel(NMDS_order, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
+
+#b - functional
+plot(NMDS, disp='sites', type="n")
+#add ellipsoids with ordiellipse
+ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
+ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
+ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#F0E442",kind="sd", conf=0.95, label=FALSE, show.groups = "ramp") 
+ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#CC79A7",kind="sd", conf=0.95, label=FALSE, show.groups = "sticky")
+#display ground trap data as solid shapes - pitfall=circle, ramp trap=square, jar=triangle, flying trap as triangle outline
+points(NMDS, display="sites", select=which(env.matrix$Trap=="pitfall"),pch=19, col="#E69F00")
+points(NMDS, display="sites", select=which(env.matrix$Trap=="jar"), pch=17, col="#009E73")
+points(NMDS, display="sites", select=which(env.matrix$Trap=="ramp"), pch=15, col="#F0E442")
+points(NMDS, display="sites", select=which(env.matrix$Trap=="sticky"), pch=25, col="#CC79A7")
+#add legend
+legend(1.46,1.45, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+#add insect taxa as text
+ordilabel(NMDS, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
+ordilabel(NMDS, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
+
+#c - beetles
+plot(NMDS_beetle, disp='sites', type="n")
+#add ellipsoids with ordiellipse
+ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
+ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
+ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#F0E442",kind="sd", conf=0.95, label=FALSE, show.groups = "ramp") 
+ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#CC79A7",kind="sd", conf=0.95, label=FALSE, show.groups = "sticky")
+#display ground trap data as solid shapes - pitfall=circle, ramp trap=square, jar=triangle, flying trap as triangle outline
+points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="pitfall"),pch=19, col="#E69F00")
+points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="jar"), pch=17, col="#009E73")
+points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="ramp"), pch=15, col="#F0E442")
+points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="sticky"), pch=25, col="#CC79A7")
+#add legend
+legend(5,5, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+#add taxa as text
+#ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
+#ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
+
+#Figure 3 - trap comparison box plots
+
+#a - order
+library(ggpubr) 
+orderfigure <- ggarrange(richness.plot_order, abundance.plot_order, diversity.plot_order, evenness.plot_order,
+                         ncol = 4, nrow = 1)
+orderfigure
+
+#b - functional 
+functionalfigure <- ggarrange(richness.plot, abundance.plot, diversity.plot, evenness.plot,
+                              ncol = 4, nrow = 1)
+functionalfigure
+
+#c - beetle
+beetlefigure <- ggarrange(richness.plot_beetle, abundance.plot_beetle, diversity.plot_beetle, evenness.plot_beetle,
+                          ncol = 4, nrow = 1,
+                          common.legend = TRUE, legend = "bottom")
+beetlefigure
+
+figure3 <- ggarrange(orderfigure, functionalfigure, beetlefigure,
+                          labels = c("A", "B", "C"),
+                          ncol = 1, nrow = 3,
+                          common.legend = TRUE, legend = "bottom")
+pdf("Figure 3.pdf", height=10, width=15) #height and width in inches
+figure3
+dev.off()
+figure3
+
+#Figure 4 - flying vs crawling (functional level)
+##insert code here once data is updated
+
+#Figure 5 - accumulation plots
+
+#a - order
+#b - functional 
+#c - beetles
+
+figure5 <- ggarrange(order_accum, functional_accum, beetle_accum,
+                     labels = c("A", "B", "C"),
+                     ncol = 1, nrow = 3,
+                     common.legend = TRUE, legend = "bottom")
+figure5
+
+pdf("Figure 5.pdf", height=6, width=6) #height and width in inches
+figure5
+dev.off()
+
+
+#Supplimentary figure 1 - trap size vs mean catch
+#currently on excel
