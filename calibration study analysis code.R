@@ -1226,5 +1226,5 @@ figure5
 dev.off()
 
 
-#Supplimentary figure 1 - trap size vs mean catch
+#Supplementary figure 1 - trap size vs mean catch
 #currently on excel
