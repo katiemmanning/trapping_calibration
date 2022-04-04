@@ -541,14 +541,13 @@ dev.off()
 functionalfigure
 ###
 
-##UPDATE##
-
+#flying vs crawling
 #input data
 flying<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/flying.csv")
 crawling<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/crawling.csv")
 
 #calculating abundance for flying
-flying.abun <- rowSums(flying[,2:32])
+flying.abun <- rowSums(flying[,2:29])
 flying$abundance <- flying.abun
 
 #calculating abundance for crawling
@@ -556,7 +555,7 @@ crawling.abun <- rowSums(crawling[,2:10])
 crawling$abundance <- crawling.abun
 
 #calculating richness for flying
-flying.rich <- rowSums(flying[,2:32]>0)
+flying.rich <- rowSums(flying[,2:29]>0)
 flying$richness <- flying.rich
 
 #calculating richness for crawling
@@ -564,7 +563,7 @@ crawling.rich <- rowSums(crawling[,2:10]>0)
 crawling$richness <- crawling.rich
 
 #abundance model for flying arthropods
-#AIC = 1845
+#AIC = 1855
 abundance.model_flying<-lm(abundance ~ Trap, data=flying)
 summary(abundance.model_flying)
 anova(abundance.model_flying)
@@ -572,12 +571,11 @@ AIC(abundance.model_flying)
 #pairwise comparison
 abun_f.emm<-emmeans(abundance.model_flying,pairwise~Trap)
 abun_f.emm
-#results: sig diff btw everything except jar-pitfall (0.9644) 
 abun_f.cld<-multcomp::cld(abun_f.emm, alpha = 0.05, Letters = LETTERS)
 abun_f.cld
 
 #abundance model for crawling arthropods
-#AIC = 1439
+#AIC = 1443
 abundance.model_crawling<-lm(abundance ~ Trap, data=crawling)
 summary(abundance.model_crawling)
 anova(abundance.model_crawling)
@@ -585,12 +583,11 @@ AIC(abundance.model_crawling)
 #pairwise comparison
 abun_c.emm<-emmeans(abundance.model_crawling,pairwise~Trap)
 abun_c.emm
-#results: sig diff btw everything except jar-pitfall (0.8163) and pitfall-sticky (0.1255)
 abun_c.cld<-multcomp::cld(abun_c.emm, alpha = 0.05, Letters = LETTERS)
 abun_c.cld
 
 #richness model for flying arthropods
-#AIC = 668
+#AIC = 660
 richness.model_flying<-lm(richness ~ Trap, data=flying)
 summary(richness.model_flying)
 anova(richness.model_flying)
@@ -598,20 +595,18 @@ AIC(richness.model_flying)
 #pairwise comparison
 rich_f.emm<-emmeans(richness.model_flying,pairwise~Trap)
 rich_f.emm
-#results: sig diff btw everything except ramp-sticky (0.3286) and jar-pitfall(0.06)
 rich_f.cld<-multcomp::cld(rich_f.emm, alpha = 0.05, Letters = LETTERS)
 rich_f.cld
 
 #richness model for crawling arthropods
-#AIC = 452
-richness.model_crawling<-glm(richness ~ Trap, data=crawling)
+#AIC = 486
+richness.model_crawling<-lm(richness ~ Trap, data=crawling)
 summary(richness.model_crawling)
 anova(richness.model_crawling)
 AIC(richness.model_crawling)
 #pairwise comparison
 rich_c.emm<-emmeans(richness.model_crawling,pairwise~Trap)
 rich_c.emm
-#results: sig diff btw everything except jar-pitfall (0.9814)
 rich_c.cld<-multcomp::cld(rich_c.emm, alpha = 0.05, Letters = LETTERS)
 rich_c.cld
 
