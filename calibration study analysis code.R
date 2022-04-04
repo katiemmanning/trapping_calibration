@@ -61,7 +61,7 @@ points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="jar"), 
 points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="ramp"), pch=15, col="#F0E442")
 points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="sticky"), pch=25, col="#CC79A7")
 #add legend
-legend(1.46,1.45, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+legend(2.1,1.45, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
 #add insect taxa as text
 ordilabel(NMDS_order, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS_order, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
@@ -666,7 +666,8 @@ figure4 <- ggarrange(abundance.plot_flying, abundance.plot_crawling,richness.plo
                      labels = c("A", "B", "C", "D"),
                      ncol = 2, nrow = 2,
                      common.legend = TRUE, legend = "bottom")
-pdf("figure4.pdf", height=6, width=8) #height and width in inches
+figure4
+pdf("Figure 4.pdf", height=6, width=8) #height and width in inches
 figure4
 dev.off()
 
