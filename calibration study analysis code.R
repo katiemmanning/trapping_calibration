@@ -547,19 +547,19 @@ flying<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calib
 crawling<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/crawling.csv")
 
 #calculating abundance for flying
-flying.abun <- rowSums(flying[,2:29])
+flying.abun <- rowSums(flying[,2:30])
 flying$abundance <- flying.abun
 
 #calculating abundance for crawling
-crawling.abun <- rowSums(crawling[,2:10])
+crawling.abun <- rowSums(crawling[,2:9])
 crawling$abundance <- crawling.abun
 
 #calculating richness for flying
-flying.rich <- rowSums(flying[,2:29]>0)
+flying.rich <- rowSums(flying[,2:30]>0)
 flying$richness <- flying.rich
 
 #calculating richness for crawling
-crawling.rich <- rowSums(crawling[,2:10]>0)
+crawling.rich <- rowSums(crawling[,2:9]>0)
 crawling$richness <- crawling.rich
 
 #abundance model for flying arthropods
@@ -587,7 +587,7 @@ abun_c.cld<-multcomp::cld(abun_c.emm, alpha = 0.05, Letters = LETTERS)
 abun_c.cld
 
 #richness model for flying arthropods
-#AIC = 660
+#AIC = 662
 richness.model_flying<-lm(richness ~ Trap, data=flying)
 summary(richness.model_flying)
 anova(richness.model_flying)
@@ -599,7 +599,7 @@ rich_f.cld<-multcomp::cld(rich_f.emm, alpha = 0.05, Letters = LETTERS)
 rich_f.cld
 
 #richness model for crawling arthropods
-#AIC = 486
+#AIC = 488
 richness.model_crawling<-lm(richness ~ Trap, data=crawling)
 summary(richness.model_crawling)
 anova(richness.model_crawling)
