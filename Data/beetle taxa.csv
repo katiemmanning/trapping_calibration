@@ -1,2 +1,4 @@
 ,Rabigus,Stenus,Meronera,Acrotona,Xantholinus,Harpalus faunus,Cratacanthus dubius,Cicindelidia punctulata,Hyperapis undulata,Brachiacantha ursina,Coleomegilla maculata,Cycloneda munda,Propylea quatuordecimpunctata,Harmonia axyridis,Hippodamia variegata
+flying,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+crawling,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
 include,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
