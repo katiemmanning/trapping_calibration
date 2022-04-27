@@ -49,6 +49,7 @@ include<-as.vector(t(taxa_order[3,]))
 include<-include[-1]
 
 #plot order NMDS
+#10x12
 plot(NMDS_order, disp='sites', type="n")
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
@@ -61,7 +62,7 @@ points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="jar"), 
 points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="ramp"), pch=15, col="#F0E442")
 points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="sticky"), pch=25, col="#CC79A7")
 #add legend
-legend(2.1,1.45, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+legend(1.20,1.35, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
 #add insect taxa as text
 ordilabel(NMDS_order, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS_order, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
@@ -376,6 +377,7 @@ include<-as.vector(t(taxa[3,]))
 include<-include[-1]
 
 #plot functional NMDS
+#10x12
 plot(NMDS, disp='sites', type="n")
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
@@ -388,7 +390,7 @@ points(NMDS, display="sites", select=which(env.matrix$Trap=="jar"), pch=17, col=
 points(NMDS, display="sites", select=which(env.matrix$Trap=="ramp"), pch=15, col="#F0E442")
 points(NMDS, display="sites", select=which(env.matrix$Trap=="sticky"), pch=25, col="#CC79A7")
 #add legend
-legend(1.46,1.45, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+#legend(1.0,1.51, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
 #add insect taxa as text
 ordilabel(NMDS, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
@@ -402,7 +404,7 @@ fit
 #P-value greater than 0.05 means assumption has been met
 distances_data<-vegdist(com.matrix)
 anova(betadisper(distances_data, env.matrix$Trap))
-#P-value = 9.533e-05 -- cannot assume homogeneity of multivariate dispersion
+#P-value = .0001 -- cannot assume homogeneity of multivariate dispersion
 
 
 ################
@@ -674,7 +676,7 @@ dev.off()
 #####################
 #species accumulation
 library (BiodiversityR)
-library(ggplot2)
+jjvlibrary(ggplot2)
 
 #individual curves for each trap type
 pitfall.com.matrix<-pitfall[c(4:42)]
