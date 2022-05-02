@@ -676,7 +676,7 @@ dev.off()
 #####################
 #species accumulation
 library (BiodiversityR)
-jjvlibrary(ggplot2)
+library(ggplot2)
 
 #individual curves for each trap type
 pitfall.com.matrix<-pitfall[c(4:42)]
@@ -695,7 +695,7 @@ sticky_curve<-accumresult(sticky.com.matrix, method = "exact", permutations = 10
 #second-order jackknife estimates are based on the number of singletons and doubletons
 
 #calculates species richness for each sample
-specnumber(com.matrix) #ranges from 1 to 17
+specnumber(com.matrix) #ranges from 1 to 20
 
 #calculates species richness by treatment (trap)
 specnumber(com.matrix, groups = insects$Trap) #jar=26; pitfall=21; ramp=35; sticky=31
