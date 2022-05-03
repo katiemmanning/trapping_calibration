@@ -1123,9 +1123,11 @@ dev.off()
 #Figure 1 - trap photos
 
 #Figure 2 - NMDSs
+#10x12
 
 #a - order
 plot(NMDS_order, disp='sites', type="n")
+title(main="Order", adj = 0.01, line = -2, cex.main=2.5)
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
 ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
@@ -1144,6 +1146,7 @@ ordilabel(NMDS_order, display="species", select =which (include==TRUE & flying =
 
 #b - functional
 plot(NMDS, disp='sites', type="n")
+title(main="Functional", adj = 0.01, line = -2, cex.main=2.5)
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
 ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
@@ -1160,8 +1163,9 @@ points(NMDS, display="sites", select=which(env.matrix$Trap=="sticky"), pch=25, c
 ordilabel(NMDS, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
 
-#c - beetles
+#c - beetle species/genus
 plot(NMDS_beetle, disp='sites', type="n")
+title(main="Species/genus", adj = 0.01, line = -2, cex.main=2.5)
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
 ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
@@ -1179,7 +1183,6 @@ ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & crawlin
 ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
 
 #Figure 3 - trap comparison box plots
-
 #a - order
 library(ggpubr) 
 orderfigure <- ggarrange(richness.plot_order, abundance.plot_order, diversity.plot_order, evenness.plot_order,
@@ -1207,10 +1210,16 @@ dev.off()
 figure3
 
 #Figure 4 - flying vs crawling (functional level)
-##insert code here once data is updated
+figure4 <- ggarrange(abundance.plot_flying, abundance.plot_crawling,richness.plot_flying,richness.plot_crawling,
+                     labels = c("A", "B", "C", "D"),
+                     ncol = 2, nrow = 2,
+                     common.legend = TRUE, legend = "bottom")
+figure4
+pdf("Figure 4.pdf", height=6, width=8) #height and width in inches
+figure4
+dev.off()
 
 #Figure 5 - accumulation plots
-
 #a - order
 #b - functional 
 #c - beetles
@@ -1227,4 +1236,19 @@ dev.off()
 
 
 #Supplementary figure 1 - trap size vs mean catch
-#currently on excel
+#bring in data
+size <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Supp%20fig%201%20data.csv",na.strings = NULL)
+library(ggplot2)
+
+trapsize <- ggplot(size, aes(x=Surface.area, y=Mean.catch, color=Trap)) +
+  theme_classic() +
+  geom_point(size=4.5, shape=16)+
+  labs(x = bquote("Trap surface area"~(cm^2)), y = "Mean arthropod catch")+
+  geom_errorbar(aes(ymin=Mean.catch-SD, ymax=Mean.catch+SD),size=1, width=3)+
+  scale_color_manual(values=c("#009E73","#E69F00","#CC79A7","#F0E442"))
+trapsize
+
+pdf("Supp figure 1.pdf", height=6, width=8) #height and width in inches
+trapsize
+dev.off()
+
