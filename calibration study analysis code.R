@@ -51,6 +51,7 @@ include<-include[-1]
 #plot order NMDS
 #10x12
 plot(NMDS_order, disp='sites', type="n")
+title(main="Order", adj = 0.01, line = -2, cex.main=2.5)
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
 ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
@@ -62,7 +63,7 @@ points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="jar"), 
 points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="ramp"), pch=15, col="#F0E442")
 points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="sticky"), pch=25, col="#CC79A7")
 #add legend
-legend(1.20,1.35, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+legend(1.13,1.43, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
 #add insect taxa as text
 ordilabel(NMDS_order, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS_order, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
@@ -379,6 +380,7 @@ include<-include[-1]
 #plot functional NMDS
 #10x12
 plot(NMDS, disp='sites', type="n")
+title(main="Functional", adj = 0.01, line = -2, cex.main=2.5)
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
 ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
@@ -841,6 +843,7 @@ include<-include[-1]
 
 #plot beetle NMDS
 plot(NMDS_beetle, disp='sites', type="n")
+title(main="Species/genus", adj = 0.01, line = -2, cex.main=2.5)
 #add ellipsoids with ordiellipse
 ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#F0E442",kind="sd", conf=0.95, label=FALSE, show.groups = "ramp") 
 ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#CC79A7",kind="sd", conf=0.95, label=FALSE, show.groups = "sticky")
