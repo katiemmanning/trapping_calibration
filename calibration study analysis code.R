@@ -1243,7 +1243,7 @@ library(ggplot2)
 trapsize <- ggplot(size, aes(x=Surface.area, y=Mean.catch, color=Trap)) +
   theme_classic() +
   geom_point(size=4.5, shape=16)+
-  labs(x = bquote("Trap surface area"~(cm^2)), y = "Mean arthropod catch")+
+  labs(x = bquote("Trap surface area"~(cm^2)), y = "Arthropoda captured")+
   geom_errorbar(aes(ymin=Mean.catch-SD, ymax=Mean.catch+SD),size=1, width=3)+
   scale_color_manual(values=c("#009E73","#E69F00","#CC79A7","#F0E442"))
 trapsize
