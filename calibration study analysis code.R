@@ -41,7 +41,6 @@ stressplot(NMDS_order)
 
 #order NMDS visualization 
 
-
 #what taxa to display using "taxa"
 flying<-as.vector(t(taxa_order[1,]))
 flying<-flying[-1]
@@ -366,6 +365,7 @@ com.matrix<-insects[c(4:42)]
 
 #ordination by NMDS
 NMDS<-metaMDS(com.matrix, distance="bray", k=2, autotransform=FALSE, trymax=100)
+NMDS
 stressplot(NMDS)
 #stress=0.15
 
@@ -825,8 +825,10 @@ com.matrix_beetle<-beetle[c(4:18)]
 
 #ordination by NMDS
 NMDS_beetle<-metaMDS(com.matrix_beetle, distance="bray", k=2, autotransform=FALSE, trymax=100)
+NMDS_beetle
 stressplot(NMDS_beetle)
-#stress= "nearly zero"
+#stress= "nearly zero" - 9.068076e-05 (changes each time)
+#no convergence
 #INSUFFICENT DATA
 
 #beetle NMDS visualization 
@@ -1127,6 +1129,13 @@ dev.off()
 #Figure 2 - NMDSs
 #10x12
 
+if (!require(devtools)) {
+  install.packages("devtools")
+}
+devtools::install_github("gavinsimpson/ggvegan")
+
+library(ggvegan)
+
 #a - order
 plot(NMDS_order, disp='sites', type="n")
 title(main="Order", adj = 0.01, line = -2, cex.main=2.5)
@@ -1165,7 +1174,7 @@ points(NMDS, display="sites", select=which(env.matrix$Trap=="sticky"), pch=25, c
 ordilabel(NMDS, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
 
-#c - beetle species/genus
+#c - focal taxa
 plot(NMDS_beetle, disp='sites', type="n")
 title(main="Species/genus", adj = 0.01, line = -2, cex.main=2.5)
 #add ellipsoids with ordiellipse
@@ -1183,6 +1192,52 @@ points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="stick
 #add taxa as text
 ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
+
+#multipanel NMDS (Figure 2 final)
+
+pdf("figureNMSDs.pdf", height=8, width=8)
+par(mfrow=c(3,1), mar=c(4.1, 4.8, 1.5, 8.1),xpd=TRUE) 
+
+plot(NMDS_order, disp='sites', type='n')
+ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
+ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
+ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#F0E442",kind="sd", conf=0.95, label=FALSE, show.groups = "ramp") 
+ordiellipse(NMDS_order, env.matrix_order$Trap, draw="polygon", col="#CC79A7",kind="sd", conf=0.95, label=FALSE, show.groups = "sticky")
+points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="pitfall"),pch=19, col="#E69F00")
+points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="jar"), pch=17, col="#009E73")
+points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="ramp"), pch=15, col="#F0E442")
+points(NMDS_order, display="sites", select=which(env.matrix_order$Trap=="sticky"), pch=25, col="#CC79A7")
+ordilabel(NMDS_order, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
+ordilabel(NMDS_order, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
+legend(1.20,1.35, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0E442","#CC79A7"), cex=.7, legend=c("Pitfall", "Jar ramp", "Yellow ramp", "Yellow sticky card"))
+text(-3.2, 0.95, "A", cex=2)
+
+plot(NMDS, disp='sites', type='n')
+ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
+ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
+ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#F0E442",kind="sd", conf=0.95, label=FALSE, show.groups = "ramp") 
+ordiellipse(NMDS, env.matrix$Trap, draw="polygon", col="#CC79A7",kind="sd", conf=0.95, label=FALSE, show.groups = "sticky")
+points(NMDS, display="sites", select=which(env.matrix$Trap=="pitfall"),pch=19, col="#E69F00")
+points(NMDS, display="sites", select=which(env.matrix$Trap=="jar"), pch=17, col="#009E73")
+points(NMDS, display="sites", select=which(env.matrix$Trap=="ramp"), pch=15, col="#F0E442")
+points(NMDS, display="sites", select=which(env.matrix$Trap=="sticky"), pch=25, col="#CC79A7")
+ordilabel(NMDS, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
+ordilabel(NMDS, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
+text(-3.2, 0.95, "B", cex=2)
+
+plot(NMDS_beetle, disp='sites', type='n')
+ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#E69F00",kind="sd", conf=0.95, label=FALSE, show.groups = "pitfall")
+ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#009E73",kind="sd", conf=0.95, label=FALSE, show.groups = "jar") 
+ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#F0E442",kind="sd", conf=0.95, label=FALSE, show.groups = "ramp") 
+ordiellipse(NMDS_beetle, env.matrix_beetle$Trap, draw="polygon", col="#CC79A7",kind="sd", conf=0.95, label=FALSE, show.groups = "sticky")
+points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="pitfall"),pch=19, col="#E69F00")
+points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="jar"), pch=17, col="#009E73")
+points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="ramp"), pch=15, col="#F0E442")
+points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="sticky"), pch=25, col="#CC79A7")
+ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & crawling == TRUE), cex=0.6, col="black", fill="white")
+ordilabel(NMDS_beetle, display="species", select =which (include==TRUE & flying == TRUE), cex=0.6, col="white", fill="black")
+text(-5, 0.95, "C", cex=2)
+dev.off()
 
 #Figure 3 - trap comparison box plots
 #a - order
