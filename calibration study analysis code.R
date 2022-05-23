@@ -35,10 +35,12 @@ com.matrix_order<-insects_order[c(4:15)]
 
 #ordination by NMDS
 NMDS_order<-metaMDS(com.matrix_order, distance="bray", k=2, autotransform=FALSE, trymax=100)
+NMDS_order
 stressplot(NMDS_order)
 #stress=0.14
 
 #order NMDS visualization 
+
 
 #what taxa to display using "taxa"
 flying<-as.vector(t(taxa_order[1,]))
