@@ -2,13 +2,13 @@
 
 #bring in order data sets from github
 
-pitfall_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_pitfall_order.csv",na.strings = NULL)
+pitfall_order <- read.csv("",na.strings = NULL)
 
-ramp_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_yellowramp_order.csv",na.strings = NULL)
+ramp_order <- read.csv("",na.strings = NULL)
 
-jar_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_jarramp_order.csv",na.strings = NULL)
+jar_order <- read.csv("",na.strings = NULL)
 
-sticky_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_stickycard_order.csv",na.strings = NULL)
+sticky_order <- read.csv("",na.strings = NULL)
 
 taxa_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Order%20taxa.csv")
 
@@ -331,13 +331,13 @@ dev.off()
 ############################################################################
 #bring in functional data sets from github
 
-pitfall <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_pitfall_functional.csv",na.strings = NULL)
+pitfall <- read.csv("",na.strings = NULL)
 
-ramp <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_yellowramp_functional.csv",na.strings = NULL)
+ramp <- read.csv("",na.strings = NULL)
 
-jar <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_jarramp_functional.csv",na.strings = NULL)
+jar <- read.csv("",na.strings = NULL)
 
-sticky <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_stickycard_functional.csv",na.strings = NULL)
+sticky <- read.csv("",na.strings = NULL)
 
 taxa <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Functional%20taxa.csv")
 
@@ -790,13 +790,13 @@ dev.off()
 
 #bring in beetle data sets from github
 
-pitfall_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_pitfall.csv",na.strings = NULL)
+pitfall_beetle <- read.csv("",na.strings = NULL)
 
-ramp_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_yellowramp.csv",na.strings = NULL)
+ramp_beetle <- read.csv("",na.strings = NULL)
 
-jar_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_jarramp.csv",na.strings = NULL)
+jar_beetle <- read.csv("",na.strings = NULL)
 
-sticky_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_stickycard.csv",na.strings = NULL)
+sticky_beetle <- read.csv("",na.strings = NULL)
 
 taxa_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/beetle%20taxa.csv")
 
