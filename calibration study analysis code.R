@@ -2,13 +2,13 @@
 
 #bring in order data sets from github
 
-pitfall_order <- read.csv("",na.strings = NULL)
+pitfall_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_pitfall_order.csv",na.strings = NULL)
 
-ramp_order <- read.csv("",na.strings = NULL)
+ramp_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_yellowramp_order.csv",na.strings = NULL)
 
-jar_order <- read.csv("",na.strings = NULL)
+jar_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_jarramp_order.csv",na.strings = NULL)
 
-sticky_order <- read.csv("",na.strings = NULL)
+sticky_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_stickycard_order.csv",na.strings = NULL)
 
 taxa_order <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Order%20taxa.csv")
 
@@ -77,7 +77,7 @@ fit
 #P-value greater than 0.05 means assumption has been met
 distances_data<-vegdist(com.matrix_order)
 anova(betadisper(distances_data, env.matrix_order$Trap))
-#P-value = 0.005918 -- cannot assume homogeneity of multivariate dispersion
+#P-value = 0.0059 -- cannot assume homogeneity of multivariate dispersion
 
 
 ################
@@ -331,7 +331,7 @@ dev.off()
 ############################################################################
 #bring in functional data sets from github
 
-pitfall <- read.csv("",na.strings = NULL)
+pitfall <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_pitfall_functional.csv",na.strings = NULL)
 
 ramp <- read.csv("",na.strings = NULL)
 
