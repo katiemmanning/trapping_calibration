@@ -333,11 +333,11 @@ dev.off()
 
 pitfall <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_pitfall_functional.csv",na.strings = NULL)
 
-ramp <- read.csv("",na.strings = NULL)
+ramp <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_yellowramp_functional.csv",na.strings = NULL)
 
-jar <- read.csv("",na.strings = NULL)
+jar <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_jarramp_functional.csv",na.strings = NULL)
 
-sticky <- read.csv("",na.strings = NULL)
+sticky <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Insect%20ID%202020_stickycard_functional.csv",na.strings = NULL)
 
 taxa <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/Functional%20taxa.csv")
 
@@ -358,9 +358,9 @@ insects <- rbind.fill (pitfallrampjar, sticky)
 library (vegan)
 
 #Create matrix of environmental variables
-env.matrix<-insects[c(1:3,43)]
+env.matrix<-insects[c(1:4,44)]
 #create matrix of community variables
-com.matrix<-insects[c(4:42)]
+com.matrix<-insects[c(5:43)]
 
 #ordination by NMDS
 NMDS<-metaMDS(com.matrix, distance="bray", k=2, autotransform=FALSE, trymax=100)
@@ -411,19 +411,19 @@ anova(betadisper(distances_data, env.matrix$Trap))
 
 ################
 #calculate Abundance
-insects.abun <- rowSums(insects[,4:42])
+insects.abun <- rowSums(insects[,5:43])
 insects$abundance <- insects.abun
 
 #calculate Richness
-insects.rowsums <- rowSums(insects[,4:42]>0)
+insects.rowsums <- rowSums(insects[,5:43]>0)
 insects$richness <- insects.rowsums
 
 #calculate Shannon diversity
-diversity <-diversity(insects[,4:42])
+diversity <-diversity(insects[,5:43])
 insects$diversity <-diversity
 
 #calculate Evenness
-evenness <-diversity/log(specnumber(insects[,4:42]))
+evenness <-diversity/log(specnumber(insects[,5:43]))
 insects$evenness <- evenness
 
 #######
@@ -434,21 +434,21 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #richness
-##AIC 718
-richness.model<-lmer(richness ~ Trap + Date + (1 | Site), data=insects)
+##AIC 716
+richness.model<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
 summary(richness.model)
 anova(richness.model)
 AIC(richness.model)
 #pairwise comparison 
 rich.emm<-emmeans(richness.model,pairwise~Trap)
 rich.emm
-#results: jar-pitfall no sig diff (0.0610), sig dif btw all others
+#results: jar-pitfall no sig diff (0.0543), sig dif btw all others
 rich.cld<-multcomp::cld(rich.emm, alpha = 0.05, Letters = LETTERS)
 rich.cld
 
 #abundance
-##AIC 1795
-abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site), data=insects)
+##AIC 1797
+abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
 summary(abundance.model)
 anova(abundance.model)
 AIC(abundance.model)
@@ -460,28 +460,28 @@ abun.cld<-multcomp::cld(abun.emm, alpha = 0.05, Letters = LETTERS)
 abun.cld
 
 #diversity
-##AIC 175 (152 w/o Date)
-diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site), data=insects)
+##AIC 176 (152 w/o Date)
+diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
 summary(diversity.model)
-anova(diversity.model)
+anova(diversity.model) #date is not significant
 AIC(diversity.model)
 #pairwise comparison 
 div.emm<-emmeans(diversity.model,pairwise~Trap)
 div.emm
-#results: no sig diff btw jar-pitfall (0.2016), jar-sticky (0.9540), pitfall-sticky (0.0661); sig diff btw all others 
+#results: no sig diff btw jar-pitfall (0.1990), jar-sticky (0.9537), pitfall-sticky (0.0649); sig diff btw all others 
 div.cld<-multcomp::cld(div.emm, alpha = 0.05, Letters = LETTERS)
 div.cld
 
 #evenness
-##AIC -172 (-193 w/o Date)
-evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site), data=insects)
+##AIC -167 (-193 w/o Date)
+evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
 summary(evenness.model)
 anova(evenness.model)
 AIC(evenness.model)
 #pairwise comparison 
 even.emm<-emmeans(evenness.model,pairwise~Trap)
 even.emm
-#results: no sig diff btw jar-pitfall (0.2851) or ramp-sticky (0.0974); sig diff btw all others
+#results: no sig diff btw jar-pitfall (0.2855) or ramp-sticky (0.0928); sig diff btw all others
 even.cld<-multcomp::cld(even.emm, alpha = 0.05, Letters = LETTERS)
 even.cld
 
