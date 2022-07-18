@@ -1,4 +1,4 @@
 variable,Diptera,Hymenoptera,Hemiptera,Coleoptera,Lepidoptera,Orthoptera,Araneae,Thysanoptera,Collembola,Psocodea,Acarina,Neuroptera
-flying_order,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
+flying_order,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE
 crawling_order,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE
 include_order,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE
