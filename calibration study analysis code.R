@@ -29,9 +29,9 @@ insects_order <- rbind.fill (pitfallrampjar_order, sticky_order)
 library (vegan)
 
 #Create matrix of environmental variables
-env.matrix_order<-insects_order[c(1:3,16)]
+env.matrix_order<-insects_order[c(1:4,17)]
 #create matrix of community variables
-com.matrix_order<-insects_order[c(4:15)]
+com.matrix_order<-insects_order[c(5:16)]
 
 #ordination by NMDS
 NMDS_order<-metaMDS(com.matrix_order, distance="bray", k=2, autotransform=FALSE, trymax=100)
@@ -77,24 +77,24 @@ fit
 #P-value greater than 0.05 means assumption has been met
 distances_data<-vegdist(com.matrix_order)
 anova(betadisper(distances_data, env.matrix_order$Trap))
-#P-value = 0.0059 -- cannot assume homogeneity of multivariate dispersion
+#P-value = 0.006 -- cannot assume homogeneity of multivariate dispersion
 
 
 ################
 #calculate order Abundance
-insects.abun_order <- rowSums(insects_order[,4:15])
+insects.abun_order <- rowSums(insects_order[,5:16])
 insects_order$abundance <- insects.abun_order
 
 #calculate order Richness
-insects.rowsums_order <- rowSums(insects_order[,4:15]>0)
+insects.rowsums_order <- rowSums(insects_order[,5:16]>0)
 insects_order$richness <- insects.rowsums_order
 
 #calculate order Shannon diversity
-diversity_order <-diversity(insects_order[,4:15])
+diversity_order <-diversity(insects_order[,5:16])
 insects_order$diversity <-diversity_order
 
 #calculate order Evenness
-evenness_order <-diversity_order/log(specnumber(insects_order[,4:15]))
+evenness_order <-diversity_order/log(specnumber(insects_order[,5:16]))
 insects_order$evenness <- evenness_order
 
 #######
@@ -105,8 +105,8 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #order richness
-##AIC 567
-richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site), data=insects_order)
+##AIC 558
+richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
 summary(richness.model_order)
 anova(richness.model_order)
 AIC(richness.model_order)
@@ -118,41 +118,42 @@ rich.cld_order<-multcomp::cld(rich.emm_order, alpha = 0.05, Letters = LETTERS)
 rich.cld_order
 
 #order abundance
-##AIC 1794
-abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site), data=insects_order)
+##AIC 1797
+abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
 summary(abundance.model_order)
 anova(abundance.model_order)
 AIC(abundance.model_order)
 #pairwise comparison 
 abun.emm_order<-emmeans(abundance.model_order,pairwise~Trap)
 abun.emm_order
-#results: no sig diff in abundance btw jar and pitfall (0.8055); sig btw rest
+#results: no sig diff in abundance btw jar and pitfall (0.8089); sig btw rest
 abun.cld_order<-multcomp::cld(abun.emm_order, alpha = 0.05, Letters = LETTERS)
 abun.cld_order
 
 #order diversity
-##AIC 128 (103 w/o Date)
-diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site), data=insects_order)
+##AIC 130
+#Date is not significant
+diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
 summary(diversity.model_order)
 anova(diversity.model_order)
 AIC(diversity.model_order)
 #pairwise comparison 
 div.emm_order<-emmeans(diversity.model_order,pairwise~Trap)
 div.emm_order
-#results: no sig diff jar-pitfall (0.4304), jar-sticky (0.8797), pitfall-sticky (0.1163); sig between rest
+#results: no sig diff jar-pitfall (0.4134), jar-sticky (0.8070), pitfall-sticky (0.0773); sig between rest
 div.cld_order<-multcomp::cld(div.emm_order, alpha = 0.05, Letters = LETTERS)
 div.cld_order
 
 #order evenness
-##AIC -186 (-206 w/o Date)
-evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site), data=insects_order)
+##AIC -184
+evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
 summary(evenness.model_order)
 anova(evenness.model_order)
 AIC(evenness.model_order)
 #pairwise comparison 
 even.emm_order<-emmeans(evenness.model_order,pairwise~Trap)
 even.emm_order
-#results: no sig diff between jar-pitfall (0.1139), jar-ramp (0.8769),jar-sticky (0.0743), ramp-sticky (0.3328); sig btw rest
+#results: no sig diff between jar-pitfall (0.1138), jar-ramp (0.8672),jar-sticky (0.1035), ramp-sticky (0.4252); sig btw rest
 even.cld_order<-multcomp::cld(even.emm_order, alpha = 0.05, Letters = LETTERS)
 even.cld_order
 
@@ -223,16 +224,16 @@ library (BiodiversityR)
 library(ggplot2)
 
 #individual curves for each trap type
-pitfall.com.matrix_order<-pitfall_order[c(4:15)]
+pitfall.com.matrix_order<-pitfall_order[c(5:16)]
 pitfall_curve_order<-accumresult(pitfall.com.matrix_order, method = "exact", permutations = 1000)
 
-jar.com.matrix_order<-jar_order[c(4:15)]
+jar.com.matrix_order<-jar_order[c(5:16)]
 jar_curve_order<-accumresult(jar.com.matrix_order, method = "exact", permutations = 1000)
 
-ramp.com.matrix_order<-ramp_order[c(4:15)]
+ramp.com.matrix_order<-ramp_order[c(5:16)]
 ramp_curve_order<-accumresult(ramp.com.matrix_order, method = "exact", permutations = 1000)
 
-sticky.com.matrix_order<-sticky_order[c(4:15)]
+sticky.com.matrix_order<-sticky_order[c(5:16)]
 sticky_curve_order<-accumresult(sticky.com.matrix_order, method = "exact", permutations = 1000)
 
 #first-order jackknife estimates are based on the number of singletons
@@ -375,7 +376,9 @@ flying_func<-as.vector(t(taxa[1,]))
 flying_func<-flying_func[-1]
 crawling_func<-as.vector(t(taxa[2,]))
 crawling_func<-crawling_func[-1]
-include_func<-as.vector(t(taxa[3,]))
+intermediate_func<-as.vector(t(taxa[3,]))
+intermediate_func<-intermediate_func[-1]
+include_func<-as.vector(t(taxa[4,]))
 include_func<-include_func[-1]
 
 #plot functional NMDS
@@ -396,6 +399,7 @@ points(NMDS, display="sites", select=which(env.matrix$Trap=="sticky"), pch=25, c
 #add insect taxa as text
 ordilabel(NMDS, display="species", select =which (include_func==TRUE & crawling_func == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS, display="species", select =which (include_func==TRUE & flying_func == TRUE), cex=0.6, col="white", fill="black")
+ordilabel(NMDS, display="species", select =which (include_func==TRUE & intermediate_func == TRUE), cex=0.6, col="white", fill="gray")
 
 #bootstrapping and testing for differences between the groups (traps)
 fit<-adonis(com.matrix ~ Trap, data = env.matrix, permutations = 999, method="bray")
@@ -549,25 +553,35 @@ functionalfigure
 #input data
 flying<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/flying.csv")
 crawling<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/crawling.csv")
+intermediate<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/intermediate.csv")
 
 #calculating abundance for flying
-flying.abun <- rowSums(flying[,2:30])
+flying.abun <- rowSums(flying[,2:23])
 flying$abundance <- flying.abun
 
 #calculating abundance for crawling
-crawling.abun <- rowSums(crawling[,2:9])
+crawling.abun <- rowSums(crawling[,2:6])
 crawling$abundance <- crawling.abun
 
+#calculating abundance for intermediate
+intermediate.abun <- rowSums(intermediate[,2:11])
+intermediate$abundance <- intermediate.abun
+
 #calculating richness for flying
-flying.rich <- rowSums(flying[,2:30]>0)
+flying.rich <- rowSums(flying[,2:23]>0)
 flying$richness <- flying.rich
 
 #calculating richness for crawling
-crawling.rich <- rowSums(crawling[,2:9]>0)
+crawling.rich <- rowSums(crawling[,2:6]>0)
 crawling$richness <- crawling.rich
 
+#calculating richness for intermediate
+intermediate.rich <- rowSums(intermediate[,2:11]>0)
+intermediate$richness <- intermediate.rich
+
+
 #abundance model for flying arthropods
-#AIC = 1855
+#AIC = 1642
 abundance.model_flying<-lm(abundance ~ Trap, data=flying)
 summary(abundance.model_flying)
 anova(abundance.model_flying)
@@ -575,11 +589,12 @@ AIC(abundance.model_flying)
 #pairwise comparison
 abun_f.emm<-emmeans(abundance.model_flying,pairwise~Trap)
 abun_f.emm
+#results: no diff btw jar-pitfall and ramp-sticky
 abun_f.cld<-multcomp::cld(abun_f.emm, alpha = 0.05, Letters = LETTERS)
 abun_f.cld
 
 #abundance model for crawling arthropods
-#AIC = 1443
+#AIC = 1442
 abundance.model_crawling<-lm(abundance ~ Trap, data=crawling)
 summary(abundance.model_crawling)
 anova(abundance.model_crawling)
@@ -587,11 +602,25 @@ AIC(abundance.model_crawling)
 #pairwise comparison
 abun_c.emm<-emmeans(abundance.model_crawling,pairwise~Trap)
 abun_c.emm
+#results: no diff btw jar-pitfall and pitfall-sticky
 abun_c.cld<-multcomp::cld(abun_c.emm, alpha = 0.05, Letters = LETTERS)
 abun_c.cld
 
+#abundance model for intermediate arthropods
+#AIC = 1725
+abundance.model_intermediate<-lm(abundance ~ Trap, data=intermediate)
+summary(abundance.model_intermediate)
+anova(abundance.model_intermediate)
+AIC(abundance.model_intermediate)
+#pairwise comparison
+abun_i.emm<-emmeans(abundance.model_intermediate,pairwise~Trap)
+abun_i.emm
+#results: no diff btw jar-pitfall, jar-sticky, or pitfall-sticky
+abun_i.cld<-multcomp::cld(abun_i.emm, alpha = 0.05, Letters = LETTERS)
+abun_i.cld
+
 #richness model for flying arthropods
-#AIC = 662
+#AIC = 591
 richness.model_flying<-lm(richness ~ Trap, data=flying)
 summary(richness.model_flying)
 anova(richness.model_flying)
@@ -599,11 +628,12 @@ AIC(richness.model_flying)
 #pairwise comparison
 rich_f.emm<-emmeans(richness.model_flying,pairwise~Trap)
 rich_f.emm
+#results: diff btw all
 rich_f.cld<-multcomp::cld(rich_f.emm, alpha = 0.05, Letters = LETTERS)
 rich_f.cld
 
 #richness model for crawling arthropods
-#AIC = 488
+#AIC = 447
 richness.model_crawling<-lm(richness ~ Trap, data=crawling)
 summary(richness.model_crawling)
 anova(richness.model_crawling)
@@ -611,9 +641,22 @@ AIC(richness.model_crawling)
 #pairwise comparison
 rich_c.emm<-emmeans(richness.model_crawling,pairwise~Trap)
 rich_c.emm
+#results: no diff btw jar-pitfall
 rich_c.cld<-multcomp::cld(rich_c.emm, alpha = 0.05, Letters = LETTERS)
 rich_c.cld
 
+#richness model for intermediate arthropods
+#AIC = 438
+richness.model_intermediate<-lm(richness ~ Trap, data=intermediate)
+summary(richness.model_intermediate)
+anova(richness.model_intermediate)
+AIC(richness.model_intermediate)
+#pairwise comparison
+rich_i.emm<-emmeans(richness.model_intermediate,pairwise~Trap)
+rich_i.emm
+#results: no diff btw jar-pitfall or jar-sticky
+rich_i.cld<-multcomp::cld(rich_i.emm, alpha = 0.05, Letters = LETTERS)
+rich_i.cld
 
 ##plot flying abundance
 abundance.plot_flying<-ggplot(flying, aes(x =Trap, y = abundance, fill=Trap))+
@@ -634,12 +677,25 @@ abundance.plot_crawling<-ggplot(crawling, aes(x =Trap, y = abundance, fill=Trap)
   theme_bw()+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
-  labs(title="Ground-crawling", x="", y="")+
+  labs(title="Crawling", x="", y="")+
   scale_y_continuous(trans="log10")+
   theme (plot.title = element_text(hjust=0.5))+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
   geom_text(data=abun_c.cld, aes(y = 600, label = .group))
 abundance.plot_crawling
+
+##plot intermediate abundance
+abundance.plot_intermediate<-ggplot(intermediate, aes(x =Trap, y = abundance, fill=Trap))+
+  geom_boxplot()+
+  theme_bw()+
+  theme(legend.position ="NULL")+
+  theme(axis.text.x=element_blank())+
+  labs(title="Intermediate", x="", y="")+
+  scale_y_continuous(trans="log10")+
+  theme (plot.title = element_text(hjust=0.5))+
+  scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
+  geom_text(data=abun_i.cld, aes(y = 600, label = .group))
+abundance.plot_intermediate
 
 ##plot flying richness
 richness.plot_flying<-ggplot(flying, aes(x =Trap, y = richness, fill=Trap))+
@@ -665,10 +721,22 @@ richness.plot_crawling<-ggplot(crawling, aes(x =Trap, y = richness, fill=Trap))+
   geom_text(data=rich_c.cld, aes(y = 15, label = .group))
 richness.plot_crawling
 
+##plot intermediate richness
+richness.plot_intermediate<-ggplot(intermediate, aes(x =Trap, y = richness, fill=Trap))+
+  geom_boxplot()+
+  theme_bw()+
+  theme(legend.position ="NULL")+
+  theme(axis.text.x=element_blank())+
+  labs(title="", x="", y="")+
+  theme (plot.title = element_text(hjust=0.5))+
+  scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
+  geom_text(data=rich_i.cld, aes(y = 15, label = .group))
+richness.plot_intermediate
+
 #mush together
-figure4 <- ggarrange(abundance.plot_flying, abundance.plot_crawling,richness.plot_flying,richness.plot_crawling,
-                     labels = c("A", "B", "C", "D"),
-                     ncol = 2, nrow = 2,
+figure4 <- ggarrange(abundance.plot_flying,abundance.plot_crawling,abundance.plot_intermediate,richness.plot_flying,richness.plot_crawling,richness.plot_intermediate,
+                     labels = c("A", "B", "C", "D", "E", "F"),
+                     ncol = 3, nrow = 3,
                      common.legend = TRUE, legend = "bottom")
 figure4
 pdf("Figure 4.pdf", height=6, width=8) #height and width in inches
@@ -681,16 +749,16 @@ library (BiodiversityR)
 library(ggplot2)
 
 #individual curves for each trap type
-pitfall.com.matrix<-pitfall[c(4:42)]
+pitfall.com.matrix<-pitfall[c(5:43)]
 pitfall_curve<-accumresult(pitfall.com.matrix, method = "exact", permutations = 1000)
 
-jar.com.matrix<-jar[c(4:42)]
+jar.com.matrix<-jar[c(5:43)]
 jar_curve<-accumresult(jar.com.matrix, method = "exact", permutations = 1000)
 
-ramp.com.matrix<-ramp[c(4:42)]
+ramp.com.matrix<-ramp[c(5:43)]
 ramp_curve<-accumresult(ramp.com.matrix, method = "exact", permutations = 1000)
 
-sticky.com.matrix<-sticky[c(4:42)]
+sticky.com.matrix<-sticky[c(5:43)]
 sticky_curve<-accumresult(sticky.com.matrix, method = "exact", permutations = 1000)
 
 #first-order jackknife estimates are based on the number of singletons
