@@ -399,7 +399,7 @@ points(NMDS, display="sites", select=which(env.matrix$Trap=="sticky"), pch=25, c
 #add insect taxa as text
 ordilabel(NMDS, display="species", select =which (include_func==TRUE & crawling_func == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS, display="species", select =which (include_func==TRUE & flying_func == TRUE), cex=0.6, col="white", fill="black")
-ordilabel(NMDS, display="species", select =which (include_func==TRUE & intermediate_func == TRUE), cex=0.6, col="white", fill="gray")
+ordilabel(NMDS, display="species", select =which (include_func==TRUE & intermediate_func == TRUE), cex=0.6, col="black", fill="gray")
 
 #bootstrapping and testing for differences between the groups (traps)
 fit<-adonis(com.matrix ~ Trap, data = env.matrix, permutations = 999, method="bray")
@@ -736,7 +736,7 @@ richness.plot_intermediate
 #mush together
 figure4 <- ggarrange(abundance.plot_flying,abundance.plot_crawling,abundance.plot_intermediate,richness.plot_flying,richness.plot_crawling,richness.plot_intermediate,
                      labels = c("A", "B", "C", "D", "E", "F"),
-                     ncol = 3, nrow = 3,
+                     ncol = 3, nrow = 2,
                      common.legend = TRUE, legend = "bottom")
 figure4
 pdf("Figure 4.pdf", height=6, width=8) #height and width in inches
@@ -858,13 +858,13 @@ dev.off()
 
 #bring in beetle data sets from github
 
-pitfall_beetle <- read.csv("",na.strings = NULL)
+pitfall_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_pitfall.csv",na.strings = NULL)
 
-ramp_beetle <- read.csv("",na.strings = NULL)
+ramp_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_yellowramp.csv",na.strings = NULL)
 
-jar_beetle <- read.csv("",na.strings = NULL)
+jar_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_jarramp.csv",na.strings = NULL)
 
-sticky_beetle <- read.csv("",na.strings = NULL)
+sticky_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/2020%20beetles_stickycard.csv",na.strings = NULL)
 
 taxa_beetle <- read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/beetle%20taxa.csv")
 
@@ -890,7 +890,7 @@ env.matrix_beetle<-beetle[c(1:3,19)]
 com.matrix_beetle<-beetle[c(4:18)]
 
 #ordination by NMDS
-NMDS_beetle<-metaMDS(com.matrix_beetle, distance="bray", k=2, autotransform=FALSE, trymax=100)
+NMDS_beetle<-metaMDS(com.matrix_beetle, distance="bray", k=2, autotransform=TRUE, trymax=100)
 NMDS_beetle
 stressplot(NMDS_beetle)
 #stress= "nearly zero" - 9.068076e-05 (changes each time)
@@ -904,7 +904,9 @@ flying_beetle<-as.vector(t(taxa_beetle[1,]))
 flying_beetle<-flying_beetle[-1]
 crawling_beetle<-as.vector(t(taxa_beetle[2,]))
 crawling_beetle<-crawling_beetle[-1]
-include_beetle<-as.vector(t(taxa_beetle[3,]))
+intermediate_beetle<-as.vector(t(taxa_beetle[3,]))
+intermediate_beetle<-intermediate_beetle[-1]
+include_beetle<-as.vector(t(taxa_beetle[4,]))
 include_beetle<-include_beetle[-1]
 
 #plot beetle NMDS
@@ -925,6 +927,7 @@ points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="stick
 #add taxa as text
 ordilabel(NMDS_beetle, display="species", select =which (include_beetle==TRUE & crawling_beetle == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS_beetle, display="species", select =which (include_beetle==TRUE & flying_beetle == TRUE), cex=0.6, col="white", fill="black")
+ordilabel(NMDS_beetle, display="species", select =which (include_beetle==TRUE & intermediate_beetle == TRUE), cex=0.6, col="black", fill="grey")
 
 #bootstrapping and testing for differences between the groups (traps)
 fit<-adonis(com.matrix_beetle ~ Trap, data = env.matrix_beetle, permutations = 999, method="bray")
@@ -971,7 +974,7 @@ AIC(richness.model_beetle)
 #pairwise comparison 
 rich.emm_beetle<-emmeans(richness.model_beetle,pairwise~Trap)
 rich.emm_beetle
-#results: 
+#results: no differences
 rich.cld_beetle<-multcomp::cld(rich.emm_beetle, alpha = 0.05, Letters = LETTERS)
 rich.cld_beetle
 
@@ -984,7 +987,7 @@ AIC(abundance.model_beetle)
 #pairwise comparison 
 abun.emm_beetle<-emmeans(abundance.model_beetle,pairwise~Trap)
 abun.emm_beetle
-#results: 
+#results: no differences
 abun.cld_beetle<-multcomp::cld(abun.emm_beetle, alpha = 0.05, Letters = LETTERS)
 abun.cld_beetle
 
@@ -997,7 +1000,7 @@ AIC(diversity.model_beetle)
 #pairwise comparison 
 div.emm_beetle<-emmeans(diversity.model_beetle,pairwise~Trap)
 div.emm_beetle
-#results: 
+#results: no differences
 div.cld_beetle<-multcomp::cld(div.emm_beetle, alpha = 0.05, Letters = LETTERS)
 div.cld_beetle
 
@@ -1023,9 +1026,8 @@ abundance.plot_beetle<-ggplot(beetle, aes(x =Trap, y = abundance, fill=Trap))+
   theme(legend.position ="NULL")+
   theme(axis.text.x=element_blank())+
   labs(x="", y="")+
-  scale_y_continuous(trans="log10")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
-  geom_text(data=abun.cld_beetle, aes(y = 600, label = .group))
+  geom_text(data=abun.cld_beetle, aes(y = 5, label = .group))
 abundance.plot_beetle
 
 #beetle richness plot
@@ -1036,7 +1038,7 @@ richness.plot_beetle<-ggplot(beetle, aes(x =Trap, y = richness, fill=Trap))+
   theme(axis.text.x=element_blank())+
   labs(x="", y="")+
   scale_fill_manual(values=c("#009E73","#E69F00","#F0E442","#CC79A7"))+
-  geom_text(data=rich.cld_beetle, aes(y = 25, label = .group))
+  geom_text(data=rich.cld_beetle, aes(y = 5, label = .group))
 richness.plot_beetle
 
 #beetle diversity plot
@@ -1197,7 +1199,7 @@ dev.off()
 
 library(ggvegan)
 
-pdf("figureNMSDs.pdf", height=9, width=7)
+pdf("figure 2.pdf", height=9, width=7)
 par(mfrow=c(3,1), mar=c(4.1, 4.8, 1.5, 8.1),xpd=TRUE) 
 
 plot(NMDS_order, disp='sites', type='n')
@@ -1225,6 +1227,7 @@ points(NMDS, display="sites", select=which(env.matrix$Trap=="ramp"), pch=15, col
 points(NMDS, display="sites", select=which(env.matrix$Trap=="sticky"), pch=25, col="#CC79A7")
 ordilabel(NMDS, display="species", select =which (include_func==TRUE & crawling_func == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS, display="species", select =which (include_func==TRUE & flying_func == TRUE), cex=0.6, col="white", fill="black")
+ordilabel(NMDS, display="species", select =which (include_func==TRUE & intermediate_func == TRUE), cex=0.6, col="black", fill="gray")
 text(-4.1, 1, "B", cex=2)
 
 plot(NMDS_beetle, disp='sites', type='n')
@@ -1238,6 +1241,7 @@ points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="ramp"
 points(NMDS_beetle, display="sites", select=which(env.matrix_beetle$Trap=="sticky"), pch=25, col="#CC79A7")
 ordilabel(NMDS_beetle, display="species", select =which (include_beetle==TRUE & crawling_beetle == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS_beetle, display="species", select =which (include_beetle==TRUE & flying_beetle == TRUE), cex=0.6, col="white", fill="black")
+ordilabel(NMDS_beetle, display="species", select =which (include_beetle==TRUE & intermediate_beetle == TRUE), cex=0.6, col="black", fill="grey")
 text(-10.5, 3.3, "C", cex=2)
 dev.off()
 
@@ -1269,9 +1273,9 @@ dev.off()
 figure3
 
 #Figure 4 - flying vs crawling (functional level)
-figure4 <- ggarrange(abundance.plot_flying, abundance.plot_crawling,richness.plot_flying,richness.plot_crawling,
-                     labels = c("A", "B", "C", "D"),
-                     ncol = 2, nrow = 2,
+figure4 <- ggarrange(abundance.plot_flying, abundance.plot_crawling,abundance.plot_intermediate,richness.plot_flying,richness.plot_crawling,richness.plot_intermediate,
+                     labels = c("A", "B", "C", "D", "E", "F"),
+                     ncol = 3, nrow = 2,
                      common.legend = TRUE, legend = "bottom")
 figure4
 pdf("Figure 4.pdf", height=6, width=8) #height and width in inches
