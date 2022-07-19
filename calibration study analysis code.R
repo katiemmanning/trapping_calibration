@@ -579,7 +579,6 @@ crawling$richness <- crawling.rich
 intermediate.rich <- rowSums(intermediate[,2:11]>0)
 intermediate$richness <- intermediate.rich
 
-
 #abundance model for flying arthropods
 #AIC = 1642
 abundance.model_flying<-lm(abundance ~ Trap, data=flying)
@@ -1272,7 +1271,7 @@ figure3
 dev.off()
 figure3
 
-#Figure 4 - flying vs crawling (functional level)
+#Figure 4 - flying vs crawling vs intermediate (functional level)
 figure4 <- ggarrange(abundance.plot_flying, abundance.plot_crawling,abundance.plot_intermediate,richness.plot_flying,richness.plot_crawling,richness.plot_intermediate,
                      labels = c("A", "B", "C", "D", "E", "F"),
                      ncol = 3, nrow = 2,
