@@ -1188,6 +1188,27 @@ dev.off()
 #######
 ## code to check assumptions
 
+if (!suppressWarnings(require(nortest))) install.packages("nortest")
+citation("nortest")
+if (!suppressWarnings(require(car))) install.packages("car")
+citation("car")
+if (!suppressWarnings(require(emmeans))) install.packages("emmeans")
+citation("emmeans")
+if (!suppressWarnings(require(bbmle))) install.packages("bbmle")
+citation("bbmle")
+if (!suppressWarnings(require(DHARMa))) install.packages("DHARMa")
+citation("DHARMa")
+if (!suppressWarnings(require(lme4))) install.packages("lme4")
+citation("lme4")
+if (!suppressWarnings(require(ggplot2))) install.packages("ggplot2")
+citation("ggplot2")
+if (!suppressWarnings(require(sjPlot))) install.packages("sjPlot")
+citation("sjPlot")
+if (!suppressWarnings(require(jtools))) install.packages("jtools")
+citation("jtools")
+if (!suppressWarnings(require(interactions))) install.packages("interactions")
+citation("interactions")
+
 #Order
 
 ##Order richness
@@ -1205,7 +1226,6 @@ with(insects_order, ad.test(richness)) #Anderson-darling test for normality (goo
 with(insects_order, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = 0.001997
 
-# this model investigates the effects of vacant lot planting treatment on ant species richness
 library(lme4)
 richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
 summary(richness.model_order)
@@ -1231,8 +1251,6 @@ plot(simulateResiduals(richness.model_order)) # another way to check for normail
 #outlier test: p = 1
 #no significant problems detected btw residual and predicted
 
-
-#cannot find functions for the following code
 densityPlot(rstudent(richness.model_order)) # check density estimate of the distribution of residuals
 
 # check for outliers influencing the data
@@ -1266,8 +1284,6 @@ plot(simulateResiduals(abundance.model_order)) # another way to check for normai
 #outlier test: p = 0.04389 -- sig deviation
 #no significant problems detected btw residual and predicted
 
-
-#cannot find functions for the following code
 densityPlot(rstudent(abundance.model_order)) # check density estimate of the distribution of residuals
 
 # check for outliers influencing the data
@@ -1301,8 +1317,6 @@ plot(simulateResiduals(diversity.model_order)) # another way to check for normai
 #outlier test: p = 0.14566
 #no significant problems detected btw residual and predicted
 
-
-#cannot find functions for the following code
 densityPlot(rstudent(diversity.model_order)) # check density estimate of the distribution of residuals
 
 # check for outliers influencing the data
@@ -1336,8 +1350,6 @@ plot(simulateResiduals(evenness.model_order)) # another way to check for normail
 #outlier test: p = 0.01003 -- sig deviation
 #no significant problems detected btw residual and predicted
 
-
-#cannot find functions for the following code
 densityPlot(rstudent(evenness.model_order)) # check density estimate of the distribution of residuals
 
 # check for outliers influencing the data
@@ -1347,10 +1359,273 @@ influenceIndexPlot(evenness.model_order, vars = c("Cook"), id = list(n = 3))
 ###
 #Functional
 
+#Functional richness
 
+dotchart(insects$richness, main = "richness", group = insects$Trap) # way to visualize outliers
+#error -- plot does not display
 
+with(insects, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = 0.0001176
 
+with(insects, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = 0.2123
 
+richness.model<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+summary(richness.model)
+anova(richness.model)
+
+plot(richness.model) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(richness.model))
+qqline(resid(richness.model))
+
+plot(simulateResiduals(richness.model)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.24934
+#dispersion test: p = 0.968
+#outlier test: p = 0.37883
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(richness.model)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(richness.model)
+influenceIndexPlot(richness.model, vars = c("Cook"), id = list(n = 3))
+
+#Functional abundance
+
+dotchart(insects$abundance, main = "abundance", group = insects$Trap) # way to visualize outliers
+#error -- plot does not display
+
+with(insects, ad.test(abundance)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = < 2.2e-16
+
+with(insects, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = < 2.2e-16
+
+abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+summary(abundance.model)
+anova(abundance.model)
+
+plot(abundance.model) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(abundance.model))
+qqline(resid(abundance.model))
+
+plot(simulateResiduals(abundance.model)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.02938 -- sig deviation
+#dispersion test: p = 0.904
+#outlier test: p = 0.04389
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(abundance.model)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(abundance.model)
+influenceIndexPlot(abundance.model, vars = c("Cook"), id = list(n = 3))
+
+#Functional diversity
+
+dotchart(insects$diversity, main = "diversity", group = insects$Trap) # way to visualize outliers
+#error -- plot does not display
+
+with(insects, ad.test(diversity)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = 5.224e-05
+
+with(insects, bartlett.test(diversity ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = 1.082e-05
+
+diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+summary(diversity.model)
+anova(diversity.model)
+
+plot(diversity.model) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(diversity.model))
+qqline(resid(diversity.model))
+
+plot(simulateResiduals(diversity.model)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.02707 -- sig deviation
+#dispersion test: p = 0.784
+#outlier test: p = 0.14566
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(diversity.model)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(diversity.model)
+influenceIndexPlot(diversity.model, vars = c("Cook"), id = list(n = 3))
+
+#Functional evenness
+
+dotchart(insects$evenness, main = "evenness", group = insects$Trap) # way to visualize outliers
+#error -- plot does not display
+
+with(insects, ad.test(evenness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = 0.0007165
+
+with(insects, bartlett.test(evenness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = 0.297
+
+evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+summary(evenness.model)
+anova(evenness.model)
+
+plot(diversity.model) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(evenness.model))
+qqline(resid(evenness.model))
+
+plot(simulateResiduals(evenness.model)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.05047
+#dispersion test: p = 0.656
+#outlier test: p = 0.04151 -- sig deviation
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(evenness.model)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(evenness.model)
+influenceIndexPlot(evenness.model, vars = c("Cook"), id = list(n = 3))
+
+##
+
+#Beetles
+
+#beetle richness
+
+dotchart(beetle$richness, main = "richness", group = beetle$Trap) # way to visualize outliers
+#error - no plot
+
+with(beetle, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = < 2.2e-16
+
+with(beetle, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = < 2.2e-16
+
+richness.model_beetle<-lmer(richness ~ Trap + Date + (1 | Site), data=beetle)
+summary(richness.model_beetle)
+anova(richness.model_beetle)
+
+plot(richness.model_beetle) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(richness.model_beetle))
+qqline(resid(richness.model_beetle))
+
+plot(simulateResiduals(richness.model_beetle)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.40783
+#dispersion test: p = 0.28
+#outlier test: p = 1
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(richness.model_beetle)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(richness.model_beetle)
+influenceIndexPlot(richness.model_beetle, vars = c("Cook"), id = list(n = 3))
+
+#beetle abundance
+
+dotchart(beetle$abundance, main = "abundance", group = beetle$Trap) # way to visualize outliers
+#error - no plot
+
+with(beetle, ad.test(abundance)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = < 2.2e-16
+
+with(beetle, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = < 2.2e-16
+
+abundance.model_beetle<-lmer(abundance ~ Trap + Date + (1 | Site), data=beetle)
+summary(abundance.model_beetle)
+anova(abundance.model_beetle)
+
+plot(abundance.model_beetle) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(abundance.model_beetle))
+qqline(resid(abundance.model_beetle))
+
+plot(simulateResiduals(abundance.model_beetle)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.40783
+#dispersion test: p = 0.28
+#outlier test: p = 1
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(abundance.model_beetle)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(abundance.model_beetle)
+influenceIndexPlot(abundance.model_beetle, vars = c("Cook"), id = list(n = 3))
+
+#beetle diversity
+
+dotchart(beetle$diversity, main = "diversity", group = beetle$Trap) # way to visualize outliers
+#error - no plot
+
+with(beetle, ad.test(diversity)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = < 2.2e-16
+
+with(beetle, bartlett.test(diversity ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = < 2.2e-16
+
+diversity.model_beetle<-lmer(diversity ~ Trap + Date + (1 | Site), data=beetle)
+summary(diversity.model_beetle)
+anova(diversity.model_beetle)
+
+plot(diversity.model_beetle) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(diversity.model_beetle))
+qqline(resid(diversity.model_beetle))
+
+plot(simulateResiduals(diversity.model_beetle)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.79254
+#dispersion test: p = 0.28
+#outlier test: p = 1
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(diversity.model_beetle)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(diversity.model_beetle)
+influenceIndexPlot(diversity.model_beetle, vars = c("Cook"), id = list(n = 3))
+
+#beetle evenness
+
+dotchart(beetle$evenness, main = "evenness", group = beetle$Trap) # way to visualize outliers
+#error - no plot
+
+with(beetle, ad.test(evenness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = 3.465e-06
+
+with(beetle, bartlett.test(evenness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = 1
+
+evenness.model_beetle<-lmer(evenness ~ Trap + Date + (1 | Site), data=beetle)
+summary(evenness.model_beetle)
+anova(evenness.model_beetle)
+
+plot(evenness.model_beetle) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(evenness.model_beetle))
+qqline(resid(evenness.model_beetle))
+
+plot(simulateResiduals(evenness.model_beetle)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.2596
+#dispersion test: p = 0.096
+#outlier test: p = 1
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(evenness.model_beetle)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(evenness.model_beetle)
+influenceIndexPlot(evenness.model_beetle, vars = c("Cook"), id = list(n = 3))
 
 #######
 #manuscript figures
