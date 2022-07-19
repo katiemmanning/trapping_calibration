@@ -79,7 +79,6 @@ distances_data<-vegdist(com.matrix_order)
 anova(betadisper(distances_data, env.matrix_order$Trap))
 #P-value = 0.006 -- cannot assume homogeneity of multivariate dispersion
 
-
 ################
 #calculate order Abundance
 insects.abun_order <- rowSums(insects_order[,5:16])
@@ -96,6 +95,57 @@ insects_order$diversity <-diversity_order
 #calculate order Evenness
 evenness_order <-diversity_order/log(specnumber(insects_order[,5:16]))
 insects_order$evenness <- evenness_order
+
+## code to check assumptions
+#ants = dataset
+#Richness = response variable, ant species richness
+
+dotchart(insects_order$richness, main = "richness", group = insects_order$Trap) # way to visualize outliers
+
+if (!suppressWarnings(require(nortest))) install.packages("nortest")
+citation("nortest")
+
+with(insects_order, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = 3.457e-07
+
+# I believe bartlett.test is in the base stats package
+with(insects_order, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = 0.001997
+
+# this model investigates the effects of vacant lot planting treatment on ant species richness
+richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+summary(richness.model_order)
+anova(richness.model_order)
+
+
+# Once you run the model, there are several ways to evaluate the model appropriateness
+# I think these are the packages, let me know if something doesn't run
+if (!suppressWarnings(require(bbmle))) install.packages("bbmle")
+citation("bbmle")
+
+if (!suppressWarnings(require(DHARMa))) install.packages("DHARMa")
+citation("DHARMa")
+
+
+plot(richness.model_order) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(richness.model_order))
+qqline(resid(richness.model_order))
+
+
+plot(simulateResiduals(richness.model_order)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.39281
+#dispersion test: p = 0.752
+#outlier test: p = 1
+#no significant problems detected btw residual and predicted
+
+densityPlot(rstudent(richness.model_order)) # check density estimate of the distribution of residuals
+#cannot find function 'densityPlot'
+
+# check for outliers influencing the data
+outlierTest(richness.model_order)
+influenceIndexPlot(richness.model_order, vars = c("Cook"), id = list(n = 3))
 
 #######
 #Mixed effects models
