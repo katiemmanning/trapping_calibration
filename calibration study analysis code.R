@@ -109,78 +109,28 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #order richness
-##AIC 662
-richness.model_order<-glmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = "poisson")
-summary(richness.model_order)
-anova(richness.model_order)
-AIC(richness.model_order)
-##AIC 653
-richness.model_order<-glmer(richness ~ Trap + (1 | Site:Replicate), data=insects_order, family = "poisson")
-summary(richness.model_order)
-anova(richness.model_order)
-AIC(richness.model_order)
-##AIC 1038
-richness.model_order<-glmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial(0.6))
-summary(richness.model_order)
-anova(richness.model_order)
-AIC(richness.model_order)
-##AIC 1026
-richness.model_order<-glmer(richness ~ Trap + (1 | Site:Replicate), data=insects_order, family = negative.binomial(0.6))
-summary(richness.model_order)
-anova(richness.model_order)
-AIC(richness.model_order)
 #AIC 559
 richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
-summary(richness.model_order)
-anova(richness.model_order)
-AIC(richness.model_order)
-#AIC 558
-richness.model_order<-lmer(richness ~ Trap + (1 | Site:Replicate), data=insects_order)
 summary(richness.model_order)
 anova(richness.model_order)
 AIC(richness.model_order)
 #pairwise comparison 
 rich.emm_order<-emmeans(richness.model_order,pairwise~Trap)
 rich.emm_order
-#results: sig difference btw all
+#results: no sig diff btw jar-pitfall (0.0527)
 rich.cld_order<-multcomp::cld(rich.emm_order, alpha = 0.05, Letters = LETTERS)
 rich.cld_order
 
 #order abundance
-##AIC 1801
-abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
-summary(abundance.model_order)
-anova(abundance.model_order)
-AIC(abundance.model_order)
-##AIC 1873
-abundance.model_order<-lmer(abundance ~ Trap + (1 | Site:Replicate), data=insects_order)
-summary(abundance.model_order)
-anova(abundance.model_order)
-AIC(abundance.model_order)
-##AIC 3158
-abundance.model_order<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = "poisson")
-summary(abundance.model_order)
-anova(abundance.model_order)
-AIC(abundance.model_order)
-##AIC 5818
-abundance.model_order<-glmer(abundance ~ Trap + (1 | Site:Replicate), data=insects_order, family = "poisson")
-summary(abundance.model_order)
-anova(abundance.model_order)
-AIC(abundance.model_order)
-##AIC 1715
-abundance.model_order<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial (0.6))
-summary(abundance.model_order)
-anova(abundance.model_order)
-AIC(abundance.model_order)
-##AIC 1721
-abundance.model_order<-glmer(abundance ~ Trap + (1 | Site:Replicate), data=insects_order, family = negative.binomial (0.6))
+##AIC 1530
+abundance.model_order<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial (4))
 summary(abundance.model_order)
 anova(abundance.model_order)
 AIC(abundance.model_order)
 #pairwise comparison 
 abun.emm_order<-emmeans(abundance.model_order,pairwise~Trap)
 abun.emm_order
-#results: no sig diff in abundance btw jar and pitfall (0.8237); sig btw rest
+#results: sig btw all
 abun.cld_order<-multcomp::cld(abun.emm_order, alpha = 0.05, Letters = LETTERS)
 abun.cld_order
 
@@ -188,11 +138,6 @@ abun.cld_order
 ##AIC 132
 #Date is not significant
 diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
-summary(diversity.model_order)
-anova(diversity.model_order)
-AIC(diversity.model_order)
-#AIC 107
-diversity.model_order<-lmer(diversity ~ Trap + (1 | Site:Replicate), data=insects_order)
 summary(diversity.model_order)
 anova(diversity.model_order)
 AIC(diversity.model_order)
@@ -204,8 +149,8 @@ div.cld_order<-multcomp::cld(div.emm_order, alpha = 0.05, Letters = LETTERS)
 div.cld_order
 
 #order evenness
-##AIC -184 (-204 w/o Date)
-evenness.model_order<-lmer(evenness ~ Trap + (1 | Site:Replicate), data=insects_order)
+##AIC -184
+evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(evenness.model_order)
 anova(evenness.model_order)
 AIC(evenness.model_order)
@@ -514,41 +459,42 @@ rich.cld<-multcomp::cld(rich.emm, alpha = 0.05, Letters = LETTERS)
 rich.cld
 
 #abundance
-##AIC 1801
-abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects)
+##AIC 1530
+abundance.model<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects, family = negative.binomial(4.3))
 summary(abundance.model)
 anova(abundance.model)
 AIC(abundance.model)
 #pairwise comparison 
 abun.emm<-emmeans(abundance.model,pairwise~Trap)
 abun.emm
-#results: jar-pitfall no sig diff (0.8237), sig dif btw all others
+#results: sig dif btw all 
 abun.cld<-multcomp::cld(abun.emm, alpha = 0.05, Letters = LETTERS)
 abun.cld
 
 #diversity
-##AIC 178 
-diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects)
+##AIC 157
+#date is not significant
+diversity.model<-lmer(diversity ~ Trap + (1 | Site:Replicate), data=insects)
 summary(diversity.model)
-anova(diversity.model) #date is not significant
+anova(diversity.model) 
 AIC(diversity.model)
 #pairwise comparison 
 div.emm<-emmeans(diversity.model,pairwise~Trap)
 div.emm
-#results: no sig diff btw jar-pitfall (0.2171), jar-sticky (0.9542), pitfall-sticky (0.0730); sig diff btw all others 
+#results: no sig diff btw jar-pitfall (0.2387), jar-sticky (0.9560), pitfall-sticky (0.0837); sig diff btw all others 
 div.cld<-multcomp::cld(div.emm, alpha = 0.05, Letters = LETTERS)
 div.cld
 
 #evenness
-##AIC -169
-evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects)
+##AIC -189
+evenness.model<-lmer(evenness ~ Trap + (1 | Site:Replicate), data=insects)
 summary(evenness.model)
 anova(evenness.model)
 AIC(evenness.model)
 #pairwise comparison 
 even.emm<-emmeans(evenness.model,pairwise~Trap)
 even.emm
-#results: no sig diff btw jar-pitfall (0.2832) or ramp-sticky (0.0928); sig diff btw all others
+#results: no sig diff btw jar-pitfall (0.3834) or ramp-sticky (0.1227); sig diff btw all others
 even.cld<-multcomp::cld(even.emm, alpha = 0.05, Letters = LETTERS)
 even.cld
 
@@ -655,41 +601,41 @@ intermediate.rich <- rowSums(intermediate[,2:11]>0)
 intermediate$richness <- intermediate.rich
 
 #abundance model for flying arthropods
-#AIC = 1642
-abundance.model_flying<-lm(abundance ~ Trap, data=flying)
+#AIC = 1260
+abundance.model_flying<-glm(abundance ~ Trap, data=flying,family = negative.binomial(2.5))
 summary(abundance.model_flying)
 anova(abundance.model_flying)
 AIC(abundance.model_flying)
 #pairwise comparison
 abun_f.emm<-emmeans(abundance.model_flying,pairwise~Trap)
 abun_f.emm
-#results: no diff btw jar-pitfall and ramp-sticky
+#results: no diff btw ramp-sticky
 abun_f.cld<-multcomp::cld(abun_f.emm, alpha = 0.05, Letters = LETTERS)
 abun_f.cld
 
 #abundance model for crawling arthropods
-#AIC = 1442
-abundance.model_crawling<-lm(abundance ~ Trap, data=crawling)
+#AIC = 1073
+abundance.model_crawling<-glm(abundance ~ Trap, data=crawling,family = negative.binomial(2))
 summary(abundance.model_crawling)
 anova(abundance.model_crawling)
 AIC(abundance.model_crawling)
 #pairwise comparison
 abun_c.emm<-emmeans(abundance.model_crawling,pairwise~Trap)
 abun_c.emm
-#results: no diff btw jar-pitfall and pitfall-sticky
+#results: no diff btw jar-pitfall 
 abun_c.cld<-multcomp::cld(abun_c.emm, alpha = 0.05, Letters = LETTERS)
 abun_c.cld
 
 #abundance model for intermediate arthropods
-#AIC = 1725
-abundance.model_intermediate<-lm(abundance ~ Trap, data=intermediate)
+#AIC = 1118
+abundance.model_intermediate<-glm(abundance ~ Trap, data=intermediate, family = negative.binomial(0.9))
 summary(abundance.model_intermediate)
 anova(abundance.model_intermediate)
 AIC(abundance.model_intermediate)
 #pairwise comparison
 abun_i.emm<-emmeans(abundance.model_intermediate,pairwise~Trap)
 abun_i.emm
-#results: no diff btw jar-pitfall, jar-sticky, or pitfall-sticky
+#results: diff btw all
 abun_i.cld<-multcomp::cld(abun_i.emm, alpha = 0.05, Letters = LETTERS)
 abun_i.cld
 
@@ -1044,7 +990,7 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #beetle richness
-##AIC 77
+##AIC 77 (69 w/o date)
 richness.model_beetle<-lmer(richness ~ Trap + Date + (1 | Site), data=beetle)
 summary(richness.model_beetle)
 anova(richness.model_beetle)
@@ -1057,7 +1003,7 @@ rich.cld_beetle<-multcomp::cld(rich.emm_beetle, alpha = 0.05, Letters = LETTERS)
 rich.cld_beetle
 
 #beetle abundance
-##AIC 77
+##AIC 77 (69 w/o date)
 abundance.model_beetle<-lmer(abundance ~ Trap + Date + (1 | Site), data=beetle)
 summary(abundance.model_beetle)
 anova(abundance.model_beetle)
@@ -1070,7 +1016,7 @@ abun.cld_beetle<-multcomp::cld(abun.emm_beetle, alpha = 0.05, Letters = LETTERS)
 abun.cld_beetle
 
 #beetle diversity
-##AIC 54 (40 w/o date)
+##AIC 53 (40 w/o date)
 diversity.model_beetle<-lmer(diversity ~ Trap + Date + (1 | Site), data=beetle)
 summary(diversity.model_beetle)
 anova(diversity.model_beetle)
@@ -1306,10 +1252,6 @@ richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=i
 summary(richness.model_order)
 anova(richness.model_order)
 
-richness.model_order<-glmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial (0.6))
-summary(richness.model_order)
-anova(richness.model_order)
-
 plot(richness.model_order) # check distribution of residuals
 
 # check normality with these figures, are there outliers at either end
@@ -1319,7 +1261,7 @@ qqline(resid(richness.model_order))
 plot(simulateResiduals(richness.model_order)) # another way to check for normailty and homogeneity of variance
 #KS test: p = 0.3696
 #dispersion test: p = 0.584
-#outlier test: p = 1
+#outlier test: p = 0.37883
 #no significant problems detected btw residual and predicted
 
 densityPlot(rstudent(richness.model_order)) # check density estimate of the distribution of residuals
@@ -1338,11 +1280,7 @@ with(insects_order, ad.test(abundance)) #Anderson-darling test for normality (go
 with(insects_order, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = 2.2 e-16
 
-abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
-summary(abundance.model_order)
-anova(abundance.model_order)
-
-abundance.model_order<-glmer(abundance ~ Trap + (1 | Site:Replicate), data=insects_order, family = negative.binomial (0.6))
+abundance.model_order<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial (4))
 summary(abundance.model_order)
 anova(abundance.model_order)
 
@@ -1353,14 +1291,15 @@ qqnorm(resid(abundance.model_order))
 qqline(resid(abundance.model_order))
 
 plot(simulateResiduals(abundance.model_order)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.03332 -- sig deviation
-#dispersion test: p = 0.736
-#outlier test: p = 0.00223 -- sig deviation
+#KS test: p = 0.68799
+#dispersion test: p = 0.616
+#outlier test: p = 1
 #no significant problems detected btw residual and predicted
 
 densityPlot(rstudent(abundance.model_order)) # check density estimate of the distribution of residuals
 
 # check for outliers influencing the data
+#can't use for glmer
 outlierTest(abundance.model_order)
 influenceIndexPlot(abundance.model_order, vars = c("Cook"), id = list(n = 3))
 
@@ -1385,8 +1324,8 @@ qqnorm(resid(diversity.model_order))
 qqline(resid(diversity.model_order))
 
 plot(simulateResiduals(diversity.model_order)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.06861
-#dispersion test: p = 0.696
+#KS test: p = 0.09052
+#dispersion test: p = 0.912
 #outlier test: p = 0.14566
 #no significant problems detected btw residual and predicted
 
@@ -1473,7 +1412,7 @@ with(insects, ad.test(abundance)) #Anderson-darling test for normality (good for
 with(insects, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = < 2.22e-16
 
-abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects)
+abundance.model<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects, family = negative.binomial (4.3))
 summary(abundance.model)
 anova(abundance.model)
 
@@ -1484,14 +1423,15 @@ qqnorm(resid(abundance.model))
 qqline(resid(abundance.model))
 
 plot(simulateResiduals(abundance.model)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.03332 -- sig deviation
-#dispersion test: p = 0.736
-#outlier test: p = 0.00223 -- sig deviation
+#KS test: p = 0.90192
+#dispersion test: p = 0.52
+#outlier test: p = 0.92
 #no significant problems detected btw residual and predicted
 
 densityPlot(rstudent(abundance.model)) # check density estimate of the distribution of residuals
 
 # check for outliers influencing the data
+#can't do for glmer
 outlierTest(abundance.model)
 influenceIndexPlot(abundance.model, vars = c("Cook"), id = list(n = 3))
 
@@ -1505,7 +1445,7 @@ with(insects, ad.test(diversity)) #Anderson-darling test for normality (good for
 with(insects, bartlett.test(diversity ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = 1.082e-05
 
-diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects)
+diversity.model<-lmer(diversity ~ Trap + (1 | Site:Replicate), data=insects)
 summary(diversity.model)
 anova(diversity.model)
 
@@ -1515,11 +1455,11 @@ plot(diversity.model) # check distribution of residuals
 qqnorm(resid(diversity.model))
 qqline(resid(diversity.model))
 
-plot(simulateResiduals(diversity.model)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.01777 -- sig deviation
-#dispersion test: p = 0.648
+plot(simulateResiduals(diversity.model)) # another way to check for normality and homogeneity of variance
+#KS test: p = 0.09851
+#dispersion test: p = 0.88
 #outlier test: p = 0.14566
-#no significant problems detected btw residual and predicted
+#no significant problems detected 
 
 densityPlot(rstudent(diversity.model)) # check density estimate of the distribution of residuals
 
@@ -1537,7 +1477,7 @@ with(insects, ad.test(evenness)) #Anderson-darling test for normality (good for 
 with(insects, bartlett.test(evenness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = 0.297
 
-evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects)
+evenness.model<-lmer(evenness ~ Trap + (1 | Site:Replicate), data=insects)
 summary(evenness.model)
 anova(evenness.model)
 
@@ -1548,10 +1488,10 @@ qqnorm(resid(evenness.model))
 qqline(resid(evenness.model))
 
 plot(simulateResiduals(evenness.model)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.04101 -- sig deviation
-#dispersion test: p = 0.688
+#KS test: p = 0.13148
+#dispersion test: p = 0.88
 #outlier test: p = 0.14013
-#no significant problems detected btw residual and predicted
+#no significant problems detected
 
 densityPlot(rstudent(evenness.model)) # check density estimate of the distribution of residuals
 
@@ -1574,6 +1514,7 @@ with(flying, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of v
 richness.model_flying<-lm(richness ~ Trap, data=flying)
 summary(richness.model_flying)
 anova(richness.model_flying)
+AIC(richness.model_flying)
 
 plot(richness.model_flying) # check distribution of residuals
 
@@ -1603,7 +1544,7 @@ with(flying, ad.test(abundance)) #Anderson-darling test for normality (good for 
 with(flying, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = < 2.22e-16
 
-abundance.model_flying<-lm(abundance ~ Trap, data=flying)
+abundance.model_flying<-glm(abundance ~ Trap, data=flying, family = negative.binomial(2.5))
 summary(abundance.model_flying)
 anova(abundance.model_flying)
 
@@ -1613,12 +1554,9 @@ plot(abundance.model_flying) # check distribution of residuals
 qqnorm(resid(abundance.model_flying))
 qqline(resid(abundance.model_flying))
 
-plot(simulateResiduals(abundance.model_flying)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 6e-05 -- sig deviation
-#dispersion test: p = 0.84
-#outlier test: p = 0.04389 -- sig deviation
-#within-group deviations from uniformity significant
-#Levene test for homogeneity of variance significant
+plot(simulateResiduals(abundance.model_flying)) # another way to check for normality and homogeneity of variance
+#doesn't run 
+#Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': could not find function "rnegbin"
 
 densityPlot(rstudent(abundance.model_flying)) # check density estimate of the distribution of residuals
 
@@ -1647,9 +1585,8 @@ qqnorm(resid(richness.model_crawling))
 qqline(resid(richness.model_crawling))
 
 plot(simulateResiduals(richness.model_crawling)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.14155
-#dispersion test: p = 0.84
-#outlier test: p = 0.64597
+#doesn't run 
+#Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': could not find function "rnegbin"
 
 densityPlot(rstudent(richness.model_crawling)) # check density estimate of the distribution of residuals
 
@@ -1667,7 +1604,7 @@ with(crawling, ad.test(abundance)) #Anderson-darling test for normality (good fo
 with(crawling, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = < 2.22e-16
 
-abundance.model_crawling<-lm(abundance ~ Trap, data=crawling)
+abundance.model_crawling<-lm(abundance ~ Trap, data=crawling, family = negative.binomial(2))
 summary(abundance.model_crawling)
 anova(abundance.model_crawling)
 
@@ -1710,7 +1647,7 @@ plot(richness.model_intermediate) # check distribution of residuals
 qqnorm(resid(richness.model_intermediate))
 qqline(resid(richness.model_intermediate))
 
-plot(simulateResiduals(richness.model_intermediate)) # another way to check for normailty and homogeneity of variance
+plot(simulateResiduals(richness.model_intermediate)) # another way to check for normality and homogeneity of variance
 #KS test: p = 0.19865
 #dispersion test: p = 0.84
 #outlier test: p = 1
@@ -1731,7 +1668,7 @@ with(intermediate, ad.test(abundance)) #Anderson-darling test for normality (goo
 with(intermediate, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = < 2.22e-16
 
-abundance.model_intermediate<-lm(abundance ~ Trap, data=intermediate)
+abundance.model_intermediate<-glm(abundance ~ Trap, data=intermediate, family = negative.binomial(0.9))
 summary(abundance.model_intermediate)
 anova(abundance.model_intermediate)
 
@@ -1741,12 +1678,9 @@ plot(abundance.model_intermediate) # check distribution of residuals
 qqnorm(resid(abundance.model_intermediate))
 qqline(resid(abundance.model_intermediate))
 
-plot(simulateResiduals(abundance.model_intermediate)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0 -- sig deviation
-#dispersion test: p = 0.84
-#outlier test: p = 0.04389 -- sig deviation
-#within-group deviations from uniformity significant
-#Levene test for homogeneity of variance significant
+plot(simulateResiduals(abundance.model_intermediate)) # another way to check for normality and homogeneity of variance
+#doesn't run 
+#Error in h(simpleError(msg, call)) : error in evaluating the argument 'x' in selecting a method for function 'plot': could not find function "rnegbin"
 
 densityPlot(rstudent(abundance.model_intermediate)) # check density estimate of the distribution of residuals
 
@@ -1771,6 +1705,7 @@ with(beetle, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of v
 richness.model_beetle<-lmer(richness ~ Trap + Date + (1 | Site), data=beetle)
 summary(richness.model_beetle)
 anova(richness.model_beetle)
+AIC (richness.model_beetle)
 
 plot(richness.model_beetle) # check distribution of residuals
 
