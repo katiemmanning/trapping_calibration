@@ -563,6 +563,18 @@ flying<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calib
 crawling<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/crawling.csv")
 intermediate<-read.csv("https://raw.githubusercontent.com/katiemmanning/trapping_calibration/main/Data/intermediate.csv")
 
+str(flying) #trap is listed as character 
+flying$Trap <- as.factor(flying$Trap)
+str(flying) #now trap is listed as a factor
+
+str(crawling) #trap is listed as character 
+crawling$Trap <- as.factor(crawling$Trap)
+str(crawling) #now trap is listed as a factor
+
+str(intermediate) #trap is listed as character 
+intermediate$Trap <- as.factor(intermediate$Trap)
+str(intermediate) #now trap is listed as a factor
+
 #calculating abundance for flying
 flying.abun <- rowSums(flying[,2:23])
 flying$abundance <- flying.abun
@@ -1483,6 +1495,201 @@ densityPlot(rstudent(evenness.model)) # check density estimate of the distributi
 # check for outliers influencing the data
 outlierTest(evenness.model)
 influenceIndexPlot(evenness.model, vars = c("Cook"), id = list(n = 3))
+
+#
+
+##Flying richness
+
+dotchart(flying$richness, main = "richness", group = flying$Trap) # way to visualize outliers
+
+with(flying, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = 4.0911e-10
+
+with(flying, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = 3.1868e-09
+
+richness.model_flying<-lm(richness ~ Trap, data=flying)
+summary(richness.model_flying)
+anova(richness.model_flying)
+
+plot(richness.model_flying) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(richness.model_flying))
+qqline(resid(richness.model_flying))
+
+plot(simulateResiduals(richness.model_flying)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.10628
+#dispersion test: p = 0.84
+#outlier test: p = 0.37883
+#Levene test for homogeneity of variance significant
+
+densityPlot(rstudent(richness.model_flying)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(richness.model_flying)
+influenceIndexPlot(richness.model_flying, vars = c("Cook"), id = list(n = 3))
+
+##Flying abundance
+
+dotchart(flying$abundance, main = "abundance", group = insects$Trap) # way to visualize outliers
+
+with(flying, ad.test(abundance)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = < 2.22e-16
+
+with(flying, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = < 2.22e-16
+
+abundance.model_flying<-lm(abundance ~ Trap, data=flying)
+summary(abundance.model_flying)
+anova(abundance.model_flying)
+
+plot(abundance.model_flying) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(abundance.model_flying))
+qqline(resid(abundance.model_flying))
+
+plot(simulateResiduals(abundance.model_flying)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 6e-05 -- sig deviation
+#dispersion test: p = 0.84
+#outlier test: p = 0.04389 -- sig deviation
+#within-group deviations from uniformity significant
+#Levene test for homogeneity of variance significant
+
+densityPlot(rstudent(abundance.model_flying)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(abundance.model_flying)
+influenceIndexPlot(abundance.model_flying, vars = c("Cook"), id = list(n = 3))
+
+##Crawling richness
+
+dotchart(crawling$richness, main = "richness", group = crawling$Trap) # way to visualize outliers
+
+with(crawling, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = 3.4109e-10
+
+with(crawling, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = 0.0067363
+
+richness.model_crawling<-lm(richness ~ Trap, data=crawling)
+summary(richness.model_crawling)
+anova(richness.model_crawling)
+
+plot(richness.model_crawling) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(richness.model_crawling))
+qqline(resid(richness.model_crawling))
+
+plot(simulateResiduals(richness.model_crawling)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.14155
+#dispersion test: p = 0.84
+#outlier test: p = 0.64597
+
+densityPlot(rstudent(richness.model_crawling)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(richness.model_crawling)
+influenceIndexPlot(richness.model_crawling, vars = c("Cook"), id = list(n = 3))
+
+##Crawling abundance
+
+dotchart(crawling$abundance, main = "abundance", group = crawling$Trap) # way to visualize outliers
+
+with(crawling, ad.test(abundance)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = < 2.22e-16
+
+with(crawling, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = < 2.22e-16
+
+abundance.model_crawling<-lm(abundance ~ Trap, data=crawling)
+summary(abundance.model_crawling)
+anova(abundance.model_crawling)
+
+plot(abundance.model_crawling) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(abundance.model_crawling))
+qqline(resid(abundance.model_crawling))
+
+plot(simulateResiduals(abundance.model_crawling)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0 -- sig deviation
+#dispersion test: p = 0.84
+#outlier test: p = 0.04389 -- sig deviation
+#within-group deviations from uniformity significant
+#Levene test for homogeneity of variance significant
+
+densityPlot(rstudent(abundance.model_crawling)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(abundance.model_crawling)
+influenceIndexPlot(abundance.model_crawling, vars = c("Cook"), id = list(n = 3))
+
+##Intermediate richness
+
+dotchart(intermediate$richness, main = "richness", group = intermediate$Trap) # way to visualize outliers
+
+with(intermediate, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = < 2.22e-16
+
+with(intermediate, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = 0.3165
+
+richness.model_intermediate<-lm(richness ~ Trap, data=intermediate)
+summary(richness.model_intermediate)
+anova(richness.model_intermediate)
+
+plot(richness.model_intermediate) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(richness.model_intermediate))
+qqline(resid(richness.model_intermediate))
+
+plot(simulateResiduals(richness.model_intermediate)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0.19865
+#dispersion test: p = 0.84
+#outlier test: p = 1
+
+densityPlot(rstudent(richness.model_intermediate)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(richness.model_intermediate)
+influenceIndexPlot(richness.model_intermediate, vars = c("Cook"), id = list(n = 3))
+
+##Intermediate abundance
+
+dotchart(intermediate$abundance, main = "abundance", group = intermediate$Trap) # way to visualize outliers
+
+with(intermediate, ad.test(abundance)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
+#p-value = < 2.22e-16
+
+with(intermediate, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
+#p-value = < 2.22e-16
+
+abundance.model_intermediate<-lm(abundance ~ Trap, data=intermediate)
+summary(abundance.model_intermediate)
+anova(abundance.model_intermediate)
+
+plot(abundance.model_intermediate) # check distribution of residuals
+
+# check normality with these figures, are there outliers at either end
+qqnorm(resid(abundance.model_intermediate))
+qqline(resid(abundance.model_intermediate))
+
+plot(simulateResiduals(abundance.model_intermediate)) # another way to check for normailty and homogeneity of variance
+#KS test: p = 0 -- sig deviation
+#dispersion test: p = 0.84
+#outlier test: p = 0.04389 -- sig deviation
+#within-group deviations from uniformity significant
+#Levene test for homogeneity of variance significant
+
+densityPlot(rstudent(abundance.model_intermediate)) # check density estimate of the distribution of residuals
+
+# check for outliers influencing the data
+outlierTest(abundance.model_intermediate)
+influenceIndexPlot(abundance.model_intermediate, vars = c("Cook"), id = list(n = 3))
 
 ##
 
