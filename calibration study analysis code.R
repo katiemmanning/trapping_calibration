@@ -109,8 +109,33 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #order richness
-##AIC 558
+##AIC 662
+richness.model_order<-glmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = "poisson")
+summary(richness.model_order)
+anova(richness.model_order)
+AIC(richness.model_order)
+##AIC 653
+richness.model_order<-glmer(richness ~ Trap + (1 | Site:Replicate), data=insects_order, family = "poisson")
+summary(richness.model_order)
+anova(richness.model_order)
+AIC(richness.model_order)
+##AIC 1038
+richness.model_order<-glmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial(0.6))
+summary(richness.model_order)
+anova(richness.model_order)
+AIC(richness.model_order)
+##AIC 1026
+richness.model_order<-glmer(richness ~ Trap + (1 | Site:Replicate), data=insects_order, family = negative.binomial(0.6))
+summary(richness.model_order)
+anova(richness.model_order)
+AIC(richness.model_order)
+#AIC 559
 richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
+summary(richness.model_order)
+anova(richness.model_order)
+AIC(richness.model_order)
+#AIC 558
+richness.model_order<-lmer(richness ~ Trap + (1 | Site:Replicate), data=insects_order)
 summary(richness.model_order)
 anova(richness.model_order)
 AIC(richness.model_order)
@@ -122,8 +147,33 @@ rich.cld_order<-multcomp::cld(rich.emm_order, alpha = 0.05, Letters = LETTERS)
 rich.cld_order
 
 #order abundance
-##AIC 1797
+##AIC 1801
 abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
+summary(abundance.model_order)
+anova(abundance.model_order)
+AIC(abundance.model_order)
+##AIC 1873
+abundance.model_order<-lmer(abundance ~ Trap + (1 | Site:Replicate), data=insects_order)
+summary(abundance.model_order)
+anova(abundance.model_order)
+AIC(abundance.model_order)
+##AIC 3158
+abundance.model_order<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = "poisson")
+summary(abundance.model_order)
+anova(abundance.model_order)
+AIC(abundance.model_order)
+##AIC 5818
+abundance.model_order<-glmer(abundance ~ Trap + (1 | Site:Replicate), data=insects_order, family = "poisson")
+summary(abundance.model_order)
+anova(abundance.model_order)
+AIC(abundance.model_order)
+##AIC 1715
+abundance.model_order<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial (0.6))
+summary(abundance.model_order)
+anova(abundance.model_order)
+AIC(abundance.model_order)
+##AIC 1721
+abundance.model_order<-glmer(abundance ~ Trap + (1 | Site:Replicate), data=insects_order, family = negative.binomial (0.6))
 summary(abundance.model_order)
 anova(abundance.model_order)
 AIC(abundance.model_order)
@@ -135,9 +185,14 @@ abun.cld_order<-multcomp::cld(abun.emm_order, alpha = 0.05, Letters = LETTERS)
 abun.cld_order
 
 #order diversity
-##AIC 130
+##AIC 132
 #Date is not significant
 diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
+summary(diversity.model_order)
+anova(diversity.model_order)
+AIC(diversity.model_order)
+#AIC 107
+diversity.model_order<-lmer(diversity ~ Trap + (1 | Site:Replicate), data=insects_order)
 summary(diversity.model_order)
 anova(diversity.model_order)
 AIC(diversity.model_order)
@@ -149,8 +204,8 @@ div.cld_order<-multcomp::cld(div.emm_order, alpha = 0.05, Letters = LETTERS)
 div.cld_order
 
 #order evenness
-##AIC -184
-evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
+##AIC -184 (-204 w/o Date)
+evenness.model_order<-lmer(evenness ~ Trap + (1 | Site:Replicate), data=insects_order)
 summary(evenness.model_order)
 anova(evenness.model_order)
 AIC(evenness.model_order)
@@ -1251,6 +1306,10 @@ richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=i
 summary(richness.model_order)
 anova(richness.model_order)
 
+richness.model_order<-glmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial (0.6))
+summary(richness.model_order)
+anova(richness.model_order)
+
 plot(richness.model_order) # check distribution of residuals
 
 # check normality with these figures, are there outliers at either end
@@ -1280,6 +1339,10 @@ with(insects_order, bartlett.test(abundance ~ Trap)) #Bartlett test for homogene
 #p-value = 2.2 e-16
 
 abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
+summary(abundance.model_order)
+anova(abundance.model_order)
+
+abundance.model_order<-glmer(abundance ~ Trap + (1 | Site:Replicate), data=insects_order, family = negative.binomial (0.6))
 summary(abundance.model_order)
 anova(abundance.model_order)
 
