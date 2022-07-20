@@ -24,6 +24,10 @@ pitfallramp_order <- rbind.fill (pitfall_order, ramp_order)
 pitfallrampjar_order <-rbind.fill (pitfallramp_order, jar_order)
 insects_order <- rbind.fill (pitfallrampjar_order, sticky_order)
 
+str(insects_order) #trap is listed as character 
+insects_order$Trap <- as.factor(insects_order$Trap)
+str(insects_order) #now trap is listed as a factor
+
 #############
 #NMDS of insect community by order between trap types
 library (vegan)
@@ -106,7 +110,7 @@ library (multcompView) #to view letters
 
 #order richness
 ##AIC 558
-richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(richness.model_order)
 anova(richness.model_order)
 AIC(richness.model_order)
@@ -119,41 +123,41 @@ rich.cld_order
 
 #order abundance
 ##AIC 1797
-abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(abundance.model_order)
 anova(abundance.model_order)
 AIC(abundance.model_order)
 #pairwise comparison 
 abun.emm_order<-emmeans(abundance.model_order,pairwise~Trap)
 abun.emm_order
-#results: no sig diff in abundance btw jar and pitfall (0.8089); sig btw rest
+#results: no sig diff in abundance btw jar and pitfall (0.8237); sig btw rest
 abun.cld_order<-multcomp::cld(abun.emm_order, alpha = 0.05, Letters = LETTERS)
 abun.cld_order
 
 #order diversity
 ##AIC 130
 #Date is not significant
-diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(diversity.model_order)
 anova(diversity.model_order)
 AIC(diversity.model_order)
 #pairwise comparison 
 div.emm_order<-emmeans(diversity.model_order,pairwise~Trap)
 div.emm_order
-#results: no sig diff jar-pitfall (0.4134), jar-sticky (0.8070), pitfall-sticky (0.0773); sig between rest
+#results: no sig diff jar-pitfall (0.4395), jar-sticky (0.8075), pitfall-sticky (0.0859); sig between rest
 div.cld_order<-multcomp::cld(div.emm_order, alpha = 0.05, Letters = LETTERS)
 div.cld_order
 
 #order evenness
 ##AIC -184
-evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(evenness.model_order)
 anova(evenness.model_order)
 AIC(evenness.model_order)
 #pairwise comparison 
 even.emm_order<-emmeans(evenness.model_order,pairwise~Trap)
 even.emm_order
-#results: no sig diff between jar-pitfall (0.1138), jar-ramp (0.8672),jar-sticky (0.1035), ramp-sticky (0.4252); sig btw rest
+#results: no sig diff between jar-pitfall (0.1060), jar-ramp (0.8689),jar-sticky (0.1062), ramp-sticky (0.4298); sig btw rest
 even.cld_order<-multcomp::cld(even.emm_order, alpha = 0.05, Letters = LETTERS)
 even.cld_order
 
@@ -354,6 +358,10 @@ pitfallramp <- rbind.fill (pitfall, ramp)
 pitfallrampjar <-rbind.fill (pitfallramp, jar)
 insects <- rbind.fill (pitfallrampjar, sticky)
 
+str(insects) #trap is listed as character 
+insects$Trap <- as.factor(insects$Trap)
+str(insects) #now trap is listed as a factor
+
 #############
 #NMDS of insect community by functional classification between trap types
 library (vegan)
@@ -438,54 +446,54 @@ library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
 
 #richness
-##AIC 716
-richness.model<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+##AIC 721
+richness.model<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(richness.model)
 anova(richness.model)
 AIC(richness.model)
 #pairwise comparison 
 rich.emm<-emmeans(richness.model,pairwise~Trap)
 rich.emm
-#results: jar-pitfall no sig diff (0.0543), sig dif btw all others
+#results: jar-pitfall no sig diff (0.0594), sig dif btw all others
 rich.cld<-multcomp::cld(rich.emm, alpha = 0.05, Letters = LETTERS)
 rich.cld
 
 #abundance
-##AIC 1797
-abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+##AIC 1801
+abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(abundance.model)
 anova(abundance.model)
 AIC(abundance.model)
 #pairwise comparison 
 abun.emm<-emmeans(abundance.model,pairwise~Trap)
 abun.emm
-#results: jar-pitfall no sig diff (0.8089), sig dif btw all others
+#results: jar-pitfall no sig diff (0.8237), sig dif btw all others
 abun.cld<-multcomp::cld(abun.emm, alpha = 0.05, Letters = LETTERS)
 abun.cld
 
 #diversity
-##AIC 176 (152 w/o Date)
-diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+##AIC 178 
+diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(diversity.model)
 anova(diversity.model) #date is not significant
 AIC(diversity.model)
 #pairwise comparison 
 div.emm<-emmeans(diversity.model,pairwise~Trap)
 div.emm
-#results: no sig diff btw jar-pitfall (0.1990), jar-sticky (0.9537), pitfall-sticky (0.0649); sig diff btw all others 
+#results: no sig diff btw jar-pitfall (0.2171), jar-sticky (0.9542), pitfall-sticky (0.0730); sig diff btw all others 
 div.cld<-multcomp::cld(div.emm, alpha = 0.05, Letters = LETTERS)
 div.cld
 
 #evenness
-##AIC -167 (-193 w/o Date)
-evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+##AIC -169
+evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(evenness.model)
 anova(evenness.model)
 AIC(evenness.model)
 #pairwise comparison 
 even.emm<-emmeans(evenness.model,pairwise~Trap)
 even.emm
-#results: no sig diff btw jar-pitfall (0.2855) or ramp-sticky (0.0928); sig diff btw all others
+#results: no sig diff btw jar-pitfall (0.2832) or ramp-sticky (0.0928); sig diff btw all others
 even.cld<-multcomp::cld(even.emm, alpha = 0.05, Letters = LETTERS)
 even.cld
 
@@ -733,13 +741,13 @@ richness.plot_intermediate<-ggplot(intermediate, aes(x =Trap, y = richness, fill
 richness.plot_intermediate
 
 #mush together
-figure4 <- ggarrange(abundance.plot_flying,abundance.plot_crawling,abundance.plot_intermediate,richness.plot_flying,richness.plot_crawling,richness.plot_intermediate,
+mobility <- ggarrange(abundance.plot_flying,abundance.plot_crawling,abundance.plot_intermediate,richness.plot_flying,richness.plot_crawling,richness.plot_intermediate,
                      labels = c("A", "B", "C", "D", "E", "F"),
                      ncol = 3, nrow = 2,
                      common.legend = TRUE, legend = "bottom")
-figure4
-pdf("Figure 4.pdf", height=6, width=8) #height and width in inches
-figure4
+mobility
+pdf("mobility_box plot.pdf", height=6, width=8) #height and width in inches
+mobility
 dev.off()
 
 #####################
@@ -878,6 +886,10 @@ library (plyr)
 pitfallramp_beetle <- rbind.fill (pitfall_beetle, ramp_beetle)
 pitfallrampjar_beetle <-rbind.fill (pitfallramp_beetle, jar_beetle)
 beetle <- rbind.fill (pitfallrampjar_beetle, sticky_beetle)
+
+str(beetle) #trap is listed as character 
+beetle$Trap <- as.factor(beetle$Trap)
+str(beetle) #now trap is listed as a factor
 
 #############
 #NMDS of beetle community between trap types
@@ -1214,10 +1226,6 @@ citation("interactions")
 ##Order richness
 
 dotchart(insects_order$richness, main = "richness", group = insects_order$Trap) # way to visualize outliers
-#error - no plot
-
-if (!suppressWarnings(require(nortest))) install.packages("nortest")
-citation("nortest")
 
 with(insects_order, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = 3.457e-07
@@ -1227,17 +1235,9 @@ with(insects_order, bartlett.test(richness ~ Trap)) #Bartlett test for homogenei
 #p-value = 0.001997
 
 library(lme4)
-richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(richness.model_order)
 anova(richness.model_order)
-
-# Once you run the model, there are several ways to evaluate the model appropriateness
-# I think these are the packages, let me know if something doesn't run
-if (!suppressWarnings(require(bbmle))) install.packages("bbmle")
-citation("bbmle")
-
-if (!suppressWarnings(require(DHARMa))) install.packages("DHARMa")
-citation("DHARMa")
 
 plot(richness.model_order) # check distribution of residuals
 
@@ -1246,8 +1246,8 @@ qqnorm(resid(richness.model_order))
 qqline(resid(richness.model_order))
 
 plot(simulateResiduals(richness.model_order)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.39281
-#dispersion test: p = 0.752
+#KS test: p = 0.3696
+#dispersion test: p = 0.584
 #outlier test: p = 1
 #no significant problems detected btw residual and predicted
 
@@ -1260,7 +1260,6 @@ influenceIndexPlot(richness.model_order, vars = c("Cook"), id = list(n = 3))
 ##Order abundance
 
 dotchart(insects_order$abundance, main = "abundance", group = insects_order$Trap) # way to visualize outliers
-#error - no plot
 
 with(insects_order, ad.test(abundance)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = 2.2 e-16
@@ -1268,7 +1267,7 @@ with(insects_order, ad.test(abundance)) #Anderson-darling test for normality (go
 with(insects_order, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = 2.2 e-16
 
-abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+abundance.model_order<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(abundance.model_order)
 anova(abundance.model_order)
 
@@ -1279,9 +1278,9 @@ qqnorm(resid(abundance.model_order))
 qqline(resid(abundance.model_order))
 
 plot(simulateResiduals(abundance.model_order)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.02938 -- sig deviation
-#dispersion test: p = 0.752
-#outlier test: p = 0.04389 -- sig deviation
+#KS test: p = 0.03332 -- sig deviation
+#dispersion test: p = 0.736
+#outlier test: p = 0.00223 -- sig deviation
 #no significant problems detected btw residual and predicted
 
 densityPlot(rstudent(abundance.model_order)) # check density estimate of the distribution of residuals
@@ -1293,15 +1292,14 @@ influenceIndexPlot(abundance.model_order, vars = c("Cook"), id = list(n = 3))
 ##Order diversity
 
 dotchart(insects_order$diversity, main = "diversity", group = insects_order$Trap) # way to visualize outliers
-#error -- plot does not display
 
 with(insects_order, ad.test(diversity)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = 4.856e-05
 
 with(insects_order, bartlett.test(diversity ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
-#p-value = 4.955e-07
+#p-value = 4.9547e-07
 
-diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(diversity.model_order)
 anova(diversity.model_order)
 
@@ -1312,8 +1310,8 @@ qqnorm(resid(diversity.model_order))
 qqline(resid(diversity.model_order))
 
 plot(simulateResiduals(diversity.model_order)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.04009 -- sig deviation
-#dispersion test: p = 0.84
+#KS test: p = 0.06861
+#dispersion test: p = 0.696
 #outlier test: p = 0.14566
 #no significant problems detected btw residual and predicted
 
@@ -1326,15 +1324,14 @@ influenceIndexPlot(diversity.model_order, vars = c("Cook"), id = list(n = 3))
 ##Order evenness
 
 dotchart(insects_order$evenness, main = "evenness", group = insects_order$Trap) # way to visualize outliers
-#error -- plot does not display
 
 with(insects_order, ad.test(evenness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
-#p-value = 0.0001081
+#p-value = 0.00010809
 
 with(insects_order, bartlett.test(evenness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
-#p-value = 0.1331
+#p-value = 0.13314
 
-evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects_order)
+evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(evenness.model_order)
 anova(evenness.model_order)
 
@@ -1345,9 +1342,9 @@ qqnorm(resid(evenness.model_order))
 qqline(resid(evenness.model_order))
 
 plot(simulateResiduals(evenness.model_order)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.11436
-#dispersion test: p = 0.664
-#outlier test: p = 0.01003 -- sig deviation
+#KS test: p = 0.06382
+#dispersion test: p = 0.656
+#outlier test: p = 0.14013
 #no significant problems detected btw residual and predicted
 
 densityPlot(rstudent(evenness.model_order)) # check density estimate of the distribution of residuals
@@ -1359,18 +1356,17 @@ influenceIndexPlot(evenness.model_order, vars = c("Cook"), id = list(n = 3))
 ###
 #Functional
 
-#Functional richness
+##Functional richness
 
 dotchart(insects$richness, main = "richness", group = insects$Trap) # way to visualize outliers
-#error -- plot does not display
 
 with(insects, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = 0.0001176
 
 with(insects, bartlett.test(richness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
-#p-value = 0.2123
+#p-value = 0.21232
 
-richness.model<-lmer(richness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+richness.model<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(richness.model)
 anova(richness.model)
 
@@ -1381,9 +1377,9 @@ qqnorm(resid(richness.model))
 qqline(resid(richness.model))
 
 plot(simulateResiduals(richness.model)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.24934
-#dispersion test: p = 0.968
-#outlier test: p = 0.37883
+#KS test: p = 0.43038
+#dispersion test: p = 0.768
+#outlier test: p = 0.14566
 #no significant problems detected btw residual and predicted
 
 densityPlot(rstudent(richness.model)) # check density estimate of the distribution of residuals
@@ -1392,18 +1388,17 @@ densityPlot(rstudent(richness.model)) # check density estimate of the distributi
 outlierTest(richness.model)
 influenceIndexPlot(richness.model, vars = c("Cook"), id = list(n = 3))
 
-#Functional abundance
+##Functional abundance
 
 dotchart(insects$abundance, main = "abundance", group = insects$Trap) # way to visualize outliers
-#error -- plot does not display
 
 with(insects, ad.test(abundance)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
-#p-value = < 2.2e-16
+#p-value = < 2.22e-16
 
 with(insects, bartlett.test(abundance ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
-#p-value = < 2.2e-16
+#p-value = < 2.22e-16
 
-abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+abundance.model<-lmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(abundance.model)
 anova(abundance.model)
 
@@ -1414,9 +1409,9 @@ qqnorm(resid(abundance.model))
 qqline(resid(abundance.model))
 
 plot(simulateResiduals(abundance.model)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.02938 -- sig deviation
-#dispersion test: p = 0.904
-#outlier test: p = 0.04389
+#KS test: p = 0.03332 -- sig deviation
+#dispersion test: p = 0.736
+#outlier test: p = 0.00223 -- sig deviation
 #no significant problems detected btw residual and predicted
 
 densityPlot(rstudent(abundance.model)) # check density estimate of the distribution of residuals
@@ -1425,10 +1420,9 @@ densityPlot(rstudent(abundance.model)) # check density estimate of the distribut
 outlierTest(abundance.model)
 influenceIndexPlot(abundance.model, vars = c("Cook"), id = list(n = 3))
 
-#Functional diversity
+##Functional diversity
 
 dotchart(insects$diversity, main = "diversity", group = insects$Trap) # way to visualize outliers
-#error -- plot does not display
 
 with(insects, ad.test(diversity)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = 5.224e-05
@@ -1436,7 +1430,7 @@ with(insects, ad.test(diversity)) #Anderson-darling test for normality (good for
 with(insects, bartlett.test(diversity ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = 1.082e-05
 
-diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+diversity.model<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(diversity.model)
 anova(diversity.model)
 
@@ -1447,8 +1441,8 @@ qqnorm(resid(diversity.model))
 qqline(resid(diversity.model))
 
 plot(simulateResiduals(diversity.model)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.02707 -- sig deviation
-#dispersion test: p = 0.784
+#KS test: p = 0.01777 -- sig deviation
+#dispersion test: p = 0.648
 #outlier test: p = 0.14566
 #no significant problems detected btw residual and predicted
 
@@ -1458,10 +1452,9 @@ densityPlot(rstudent(diversity.model)) # check density estimate of the distribut
 outlierTest(diversity.model)
 influenceIndexPlot(diversity.model, vars = c("Cook"), id = list(n = 3))
 
-#Functional evenness
+##Functional evenness
 
 dotchart(insects$evenness, main = "evenness", group = insects$Trap) # way to visualize outliers
-#error -- plot does not display
 
 with(insects, ad.test(evenness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = 0.0007165
@@ -1469,20 +1462,20 @@ with(insects, ad.test(evenness)) #Anderson-darling test for normality (good for 
 with(insects, bartlett.test(evenness ~ Trap)) #Bartlett test for homogeneity of variance, low p-value means assumption is violated
 #p-value = 0.297
 
-evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site) + (1 | Site:Replicate), data=insects)
+evenness.model<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(evenness.model)
 anova(evenness.model)
 
-plot(diversity.model) # check distribution of residuals
+plot(evenness.model) # check distribution of residuals
 
 # check normality with these figures, are there outliers at either end
 qqnorm(resid(evenness.model))
 qqline(resid(evenness.model))
 
 plot(simulateResiduals(evenness.model)) # another way to check for normailty and homogeneity of variance
-#KS test: p = 0.05047
-#dispersion test: p = 0.656
-#outlier test: p = 0.04151 -- sig deviation
+#KS test: p = 0.04101 -- sig deviation
+#dispersion test: p = 0.688
+#outlier test: p = 0.14013
 #no significant problems detected btw residual and predicted
 
 densityPlot(rstudent(evenness.model)) # check density estimate of the distribution of residuals
@@ -1495,10 +1488,9 @@ influenceIndexPlot(evenness.model, vars = c("Cook"), id = list(n = 3))
 
 #Beetles
 
-#beetle richness
+##beetle richness
 
 dotchart(beetle$richness, main = "richness", group = beetle$Trap) # way to visualize outliers
-#error - no plot
 
 with(beetle, ad.test(richness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = < 2.2e-16
@@ -1531,7 +1523,6 @@ influenceIndexPlot(richness.model_beetle, vars = c("Cook"), id = list(n = 3))
 #beetle abundance
 
 dotchart(beetle$abundance, main = "abundance", group = beetle$Trap) # way to visualize outliers
-#error - no plot
 
 with(beetle, ad.test(abundance)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = < 2.2e-16
@@ -1561,10 +1552,9 @@ densityPlot(rstudent(abundance.model_beetle)) # check density estimate of the di
 outlierTest(abundance.model_beetle)
 influenceIndexPlot(abundance.model_beetle, vars = c("Cook"), id = list(n = 3))
 
-#beetle diversity
+##beetle diversity
 
 dotchart(beetle$diversity, main = "diversity", group = beetle$Trap) # way to visualize outliers
-#error - no plot
 
 with(beetle, ad.test(diversity)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = < 2.2e-16
@@ -1594,10 +1584,9 @@ densityPlot(rstudent(diversity.model_beetle)) # check density estimate of the di
 outlierTest(diversity.model_beetle)
 influenceIndexPlot(diversity.model_beetle, vars = c("Cook"), id = list(n = 3))
 
-#beetle evenness
+##beetle evenness
 
 dotchart(beetle$evenness, main = "evenness", group = beetle$Trap) # way to visualize outliers
-#error - no plot
 
 with(beetle, ad.test(evenness)) #Anderson-darling test for normality (good for small sample sizes), low p-value means assumption is violated
 #p-value = 3.465e-06
@@ -1632,7 +1621,11 @@ influenceIndexPlot(evenness.model_beetle, vars = c("Cook"), id = list(n = 3))
 
 #Figure 1 - trap photos
 
-#Figure 2 - multipanel NMDS
+#Figure 2 - step by step jar trap construction
+
+#Figure 3 - jar ramp trap with lid
+
+#Figure 4 - multipanel NMDS
 
 #if (!require(devtools)) {
   #install.packages("devtools")
@@ -1641,7 +1634,7 @@ influenceIndexPlot(evenness.model_beetle, vars = c("Cook"), id = list(n = 3))
 
 library(ggvegan)
 
-pdf("figure 2.pdf", height=9, width=7)
+pdf("Figure 4.pdf", height=9, width=7)
 par(mfrow=c(3,1), mar=c(4.1, 4.8, 1.5, 8.1),xpd=TRUE) 
 
 plot(NMDS_order, disp='sites', type='n')
@@ -1687,7 +1680,7 @@ ordilabel(NMDS_beetle, display="species", select =which (include_beetle==TRUE & 
 text(-10.5, 3.3, "C", cex=2)
 dev.off()
 
-#Figure 3 - trap comparison box plots
+#Figure 5 - trap comparison box plots
 #a - order
 library(ggpubr) 
 orderfigure <- ggarrange(richness.plot_order, abundance.plot_order, diversity.plot_order, evenness.plot_order,
@@ -1705,38 +1698,38 @@ beetlefigure <- ggarrange(richness.plot_beetle, abundance.plot_beetle, diversity
                           common.legend = TRUE, legend = "bottom")
 beetlefigure
 
-figure3 <- ggarrange(orderfigure, functionalfigure, beetlefigure,
+figure5 <- ggarrange(orderfigure, functionalfigure, beetlefigure,
                           labels = c("A", "B", "C"),
                           ncol = 1, nrow = 3,
                           common.legend = TRUE, legend = "bottom")
-pdf("Figure 3.pdf", height=10, width=15) #height and width in inches
-figure3
+pdf("Figure 5.pdf", height=10, width=15) #height and width in inches
+figure5
 dev.off()
-figure3
+figure5
 
-#Figure 4 - flying vs crawling vs intermediate (functional level)
-figure4 <- ggarrange(abundance.plot_flying, abundance.plot_crawling,abundance.plot_intermediate,richness.plot_flying,richness.plot_crawling,richness.plot_intermediate,
+#Figure 6 - flying vs crawling vs intermediate (functional level)
+figure6 <- ggarrange(abundance.plot_flying, abundance.plot_crawling,abundance.plot_intermediate,richness.plot_flying,richness.plot_crawling,richness.plot_intermediate,
                      labels = c("A", "B", "C", "D", "E", "F"),
                      ncol = 3, nrow = 2,
                      common.legend = TRUE, legend = "bottom")
-figure4
-pdf("Figure 4.pdf", height=6, width=8) #height and width in inches
-figure4
+figure6
+pdf("Figure 6.pdf", height=6, width=8) #height and width in inches
+figure6
 dev.off()
 
-#Figure 5 - accumulation plots
+#Figure 7 - accumulation plots
 #a - order
 #b - functional 
 #c - beetles
 
-figure5 <- ggarrange(order_accum, functional_accum, beetle_accum,
+figure7 <- ggarrange(order_accum, functional_accum, beetle_accum,
                      labels = c("A", "B", "C"),
                      ncol = 1, nrow = 3,
                      common.legend = TRUE, legend = "bottom")
-figure5
+figure7
 
-pdf("Figure 5.pdf", height=6, width=6) #height and width in inches
-figure5
+pdf("Figure 7.pdf", height=6, width=6) #height and width in inches
+figure7
 dev.off()
 
 
