@@ -152,12 +152,13 @@ library(lme4)
 library(lmerTest) #to obtain p values
 library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
+library (car)
 
 #order richness
 #AIC 559
 richness.model_order<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(richness.model_order)
-anova(richness.model_order)
+Anova (richness.model_order)
 AIC(richness.model_order)
 #pairwise comparison 
 rich.emm_order<-emmeans(richness.model_order,pairwise~Trap)
@@ -170,7 +171,7 @@ rich.cld_order
 ##AIC 1530
 abundance.model_order<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects_order, family = negative.binomial (4))
 summary(abundance.model_order)
-anova(abundance.model_order)
+Anova(abundance.model_order)
 AIC(abundance.model_order)
 #pairwise comparison 
 abun.emm_order<-emmeans(abundance.model_order,pairwise~Trap)
@@ -184,7 +185,7 @@ abun.cld_order
 #Date is not significant
 diversity.model_order<-lmer(diversity ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(diversity.model_order)
-anova(diversity.model_order)
+Anova(diversity.model_order)
 AIC(diversity.model_order)
 #pairwise comparison 
 div.emm_order<-emmeans(diversity.model_order,pairwise~Trap)
@@ -197,7 +198,7 @@ div.cld_order
 ##AIC -184
 evenness.model_order<-lmer(evenness ~ Trap + Date + (1 | Site:Replicate), data=insects_order)
 summary(evenness.model_order)
-anova(evenness.model_order)
+Anova(evenness.model_order)
 AIC(evenness.model_order)
 #pairwise comparison 
 even.emm_order<-emmeans(evenness.model_order,pairwise~Trap)
@@ -534,12 +535,13 @@ library(lme4)
 library(lmerTest) #to obtain p values
 library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
+library (car) #for Anova (which is needed because of negative binomial)
 
 #richness
 ##AIC 721
 richness.model<-lmer(richness ~ Trap + Date + (1 | Site:Replicate), data=insects)
 summary(richness.model)
-anova(richness.model)
+Anova(richness.model)
 AIC(richness.model)
 #pairwise comparison 
 rich.emm<-emmeans(richness.model,pairwise~Trap)
@@ -552,7 +554,7 @@ rich.cld
 ##AIC 1530
 abundance.model<-glmer(abundance ~ Trap + Date + (1 | Site:Replicate), data=insects, family = negative.binomial(4.3))
 summary(abundance.model)
-anova(abundance.model)
+Anova(abundance.model)
 AIC(abundance.model)
 #pairwise comparison 
 abun.emm<-emmeans(abundance.model,pairwise~Trap)
@@ -566,7 +568,7 @@ abun.cld
 #date is not significant
 diversity.model<-lmer(diversity ~ Trap + (1 | Site:Replicate), data=insects)
 summary(diversity.model)
-anova(diversity.model) 
+Anova(diversity.model) 
 AIC(diversity.model)
 #pairwise comparison 
 div.emm<-emmeans(diversity.model,pairwise~Trap)
@@ -579,7 +581,7 @@ div.cld
 ##AIC -189
 evenness.model<-lmer(evenness ~ Trap + (1 | Site:Replicate), data=insects)
 summary(evenness.model)
-anova(evenness.model)
+Anova(evenness.model)
 AIC(evenness.model)
 #pairwise comparison 
 even.emm<-emmeans(evenness.model,pairwise~Trap)
@@ -670,31 +672,49 @@ str(intermediate) #now trap is listed as a factor
 flying.abun <- rowSums(flying[,2:23])
 flying$abundance <- flying.abun
 
+mean(flying$abundance) #43.18
+sd(flying$abundance)/sqrt(10) #16.32
+
 #calculating abundance for crawling
 crawling.abun <- rowSums(crawling[,2:6])
 crawling$abundance <- crawling.abun
+
+mean(crawling$abundance) #18.4
+sd(crawling$abundance)/sqrt(10) #8.14
 
 #calculating abundance for intermediate
 intermediate.abun <- rowSums(intermediate[,2:11])
 intermediate$abundance <- intermediate.abun
 
+mean(intermediate$abundance) #20.53
+sd(intermediate$abundance)/sqrt(10) #15.94
+
 #calculating richness for flying
 flying.rich <- rowSums(flying[,2:23]>0)
 flying$richness <- flying.rich
+
+mean(flying$richness) #3.88
+sd(flying$richness)/sqrt(10) #0.85
 
 #calculating richness for crawling
 crawling.rich <- rowSums(crawling[,2:6]>0)
 crawling$richness <- crawling.rich
 
+mean(crawling$richness) #2.65
+sd(crawling$richness)/sqrt(10) #0.51
+
 #calculating richness for intermediate
 intermediate.rich <- rowSums(intermediate[,2:11]>0)
 intermediate$richness <- intermediate.rich
+
+mean(intermediate$richness) #1.68
+sd(intermediate$richness)/sqrt(10) #0.32
 
 #abundance model for flying arthropods
 #AIC = 1260
 abundance.model_flying<-glm(abundance ~ Trap, data=flying,family = negative.binomial(2.5))
 summary(abundance.model_flying)
-anova(abundance.model_flying)
+Anova(abundance.model_flying)
 AIC(abundance.model_flying)
 #pairwise comparison
 abun_f.emm<-emmeans(abundance.model_flying,pairwise~Trap)
@@ -707,7 +727,7 @@ abun_f.cld
 #AIC = 1073
 abundance.model_crawling<-glm(abundance ~ Trap, data=crawling,family = negative.binomial(2))
 summary(abundance.model_crawling)
-anova(abundance.model_crawling)
+Anova(abundance.model_crawling)
 AIC(abundance.model_crawling)
 #pairwise comparison
 abun_c.emm<-emmeans(abundance.model_crawling,pairwise~Trap)
@@ -720,7 +740,7 @@ abun_c.cld
 #AIC = 1118
 abundance.model_intermediate<-glm(abundance ~ Trap, data=intermediate, family = negative.binomial(0.9))
 summary(abundance.model_intermediate)
-anova(abundance.model_intermediate)
+Anova(abundance.model_intermediate)
 AIC(abundance.model_intermediate)
 #pairwise comparison
 abun_i.emm<-emmeans(abundance.model_intermediate,pairwise~Trap)
@@ -733,7 +753,7 @@ abun_i.cld
 #AIC = 591
 richness.model_flying<-lm(richness ~ Trap, data=flying)
 summary(richness.model_flying)
-anova(richness.model_flying)
+Anova(richness.model_flying)
 AIC(richness.model_flying)
 #pairwise comparison
 rich_f.emm<-emmeans(richness.model_flying,pairwise~Trap)
@@ -746,7 +766,7 @@ rich_f.cld
 #AIC = 447
 richness.model_crawling<-lm(richness ~ Trap, data=crawling)
 summary(richness.model_crawling)
-anova(richness.model_crawling)
+Anova(richness.model_crawling)
 AIC(richness.model_crawling)
 #pairwise comparison
 rich_c.emm<-emmeans(richness.model_crawling,pairwise~Trap)
@@ -759,7 +779,7 @@ rich_c.cld
 #AIC = 438
 richness.model_intermediate<-lm(richness ~ Trap, data=intermediate)
 summary(richness.model_intermediate)
-anova(richness.model_intermediate)
+Anova(richness.model_intermediate)
 AIC(richness.model_intermediate)
 #pairwise comparison
 rich_i.emm<-emmeans(richness.model_intermediate,pairwise~Trap)
@@ -1083,7 +1103,7 @@ library (multcompView) #to view letters
 ##AIC 77 (69 w/o date)
 richness.model_beetle<-lmer(richness ~ Trap + Date + (1 | Site), data=beetle)
 summary(richness.model_beetle)
-anova(richness.model_beetle)
+Anova(richness.model_beetle)
 AIC(richness.model_beetle)
 #pairwise comparison 
 rich.emm_beetle<-emmeans(richness.model_beetle,pairwise~Trap)
@@ -1096,7 +1116,7 @@ rich.cld_beetle
 ##AIC 77 (69 w/o date)
 abundance.model_beetle<-lmer(abundance ~ Trap + Date + (1 | Site), data=beetle)
 summary(abundance.model_beetle)
-anova(abundance.model_beetle)
+Anova(abundance.model_beetle)
 AIC(abundance.model_beetle)
 #pairwise comparison 
 abun.emm_beetle<-emmeans(abundance.model_beetle,pairwise~Trap)
@@ -1109,7 +1129,7 @@ abun.cld_beetle
 ##AIC 53 (40 w/o date)
 diversity.model_beetle<-lmer(diversity ~ Trap + Date + (1 | Site), data=beetle)
 summary(diversity.model_beetle)
-anova(diversity.model_beetle)
+Anova(diversity.model_beetle)
 AIC(diversity.model_beetle)
 #pairwise comparison 
 div.emm_beetle<-emmeans(diversity.model_beetle,pairwise~Trap)
@@ -1122,7 +1142,7 @@ div.cld_beetle
 ##AIC -193 (-411 w/o date)
 evenness.model_beetle<-lmer(evenness ~ Trap + Date + (1 | Site), data=beetle)
 summary(evenness.model_beetle)
-anova(evenness.model_beetle)
+Anova(evenness.model_beetle)
 AIC(evenness.model_beetle)
 #pairwise comparison 
 even.emm_beetle<-emmeans(evenness.model_beetle,pairwise~Trap)
@@ -1803,7 +1823,7 @@ plot(richness.model_beetle) # check distribution of residuals
 qqnorm(resid(richness.model_beetle))
 qqline(resid(richness.model_beetle))
 
-plot(simulateResiduals(richness.model_beetle)) # another way to check for normailty and homogeneity of variance
+plot(simulateResiduals(richness.model_beetle)) # another way to check for normality and homogeneity of variance
 #KS test: p = 0.40783
 #dispersion test: p = 0.28
 #outlier test: p = 1
