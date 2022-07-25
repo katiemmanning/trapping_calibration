@@ -18,6 +18,51 @@ ramp_order$Trap="ramp"
 jar_order$Trap="jar"
 sticky_order$Trap="sticky"
 
+#calculate mean and SE richness and abundance of each trap type
+insects.abun <- rowSums(pitfall_order[,5:16])
+pitfall_order$abundance <- insects.abun
+insects.rowsums <- rowSums(pitfall_order[,5:16]>0)
+pitfall_order$richness <- insects.rowsums
+
+insects.abun <- rowSums(jar_order[,5:16])
+jar_order$abundance <- insects.abun
+insects.rowsums <- rowSums(jar_order[,5:16]>0)
+jar_order$richness <- insects.rowsums
+
+insects.abun <- rowSums(ramp_order[,5:16])
+ramp_order$abundance <- insects.abun
+insects.rowsums <- rowSums(ramp_order[,5:16]>0)
+ramp_order$richness <- insects.rowsums
+
+insects.abun <- rowSums(sticky_order[,5:16])
+sticky_order$abundance <- insects.abun
+insects.rowsums <- rowSums(sticky_order[,5:16]>0)
+sticky_order$richness <- insects.rowsums
+
+mean(pitfall_order$abundance) #14.82
+sd(pitfall_order$abundance)/sqrt(10) #3.73
+
+mean(pitfall_order$richness) #4.31
+sd(pitfall_order$richness)/sqrt(10) #0.51
+
+mean(jar_order$abundance) #26.2
+sd(jar_order$abundance)/sqrt(10) #4.97
+
+mean(jar_order$richness) #5
+sd(jar_order$richness)/sqrt(10) #0.45
+
+mean(ramp_order$abundance) #184.71
+sd(ramp_order$abundance)/sqrt(10) #44.25
+
+mean(ramp_order$richness) #7.81
+sd(ramp_order$richness)/sqrt(10) #0.32
+
+mean(sticky_order$abundance) #99.98
+sd(sticky_order$abundance)/sqrt(10) #17.85
+
+mean(sticky_order$richness) #5.90
+sd(sticky_order$richness)/sqrt(10) #.30
+
 #combine order data tables 
 library (plyr)
 pitfallramp_order <- rbind.fill (pitfall_order, ramp_order)
@@ -72,7 +117,7 @@ legend(1.13,1.43, title=NULL, pch=c(19,17,15,25), col=c("#E69F00","#009E73","#F0
 ordilabel(NMDS_order, display="species", select =which (include_order==TRUE & crawling_order == TRUE), cex=0.6, col="black", fill="white")
 ordilabel(NMDS_order, display="species", select =which (include_order==TRUE & flying_order == TRUE), cex=0.6, col="white", fill="black")
 
-#bootstrapping and testing for differences between the groups (traps)
+#PERMANOVA -- testing for differences between the groups (traps)
 fit<-adonis(com.matrix_order ~ Trap, data = env.matrix_order, permutations = 999, method="bray")
 fit
 #P-value = 0.001
@@ -117,7 +162,7 @@ AIC(richness.model_order)
 #pairwise comparison 
 rich.emm_order<-emmeans(richness.model_order,pairwise~Trap)
 rich.emm_order
-#results: no sig diff btw jar-pitfall (0.0527)
+#results: no sig diff btw any
 rich.cld_order<-multcomp::cld(rich.emm_order, alpha = 0.05, Letters = LETTERS)
 rich.cld_order
 
@@ -351,6 +396,51 @@ pitfall$Trap="pitfall"
 ramp$Trap="ramp"
 jar$Trap="jar"
 sticky$Trap="sticky"
+
+#calculate mean and SE richness and abundance of each trap type
+insects.abun <- rowSums(pitfall[,5:43])
+pitfall$abundance <- insects.abun
+insects.rowsums <- rowSums(pitfall[,5:43]>0)
+pitfall$richness <- insects.rowsums
+
+insects.abun <- rowSums(jar[,5:43])
+jar$abundance <- insects.abun
+insects.rowsums <- rowSums(jar[,5:43]>0)
+jar$richness <- insects.rowsums
+
+insects.abun <- rowSums(ramp[,5:43])
+ramp$abundance <- insects.abun
+insects.rowsums <- rowSums(ramp[,5:43]>0)
+ramp$richness <- insects.rowsums
+
+insects.abun <- rowSums(sticky[,5:43])
+sticky$abundance <- insects.abun
+insects.rowsums <- rowSums(sticky[,5:43]>0)
+sticky$richness <- insects.rowsums
+
+mean(pitfall$abundance) #14.82
+sd(pitfall$abundance)/sqrt(10) #3.73
+
+mean(pitfall$richness) #5.28
+sd(pitfall$richness)/sqrt(10) #0.69
+
+mean(jar$abundance) #26.17
+sd(jar$abundance)/sqrt(10) #4.97
+
+mean(jar$richness) #6.36
+sd(jar$richness)/sqrt(10) #0.64
+
+mean(ramp$abundance) #184.71
+sd(ramp$abundance)/sqrt(10) #44.25
+
+mean(ramp$richness) #12.76
+sd(ramp$richness)/sqrt(10) #0.87
+
+mean(sticky$abundance) #99.98
+sd(sticky$abundance)/sqrt(10) #17.85
+
+mean(sticky$richness) #9.29
+sd(sticky$richness)/sqrt(10) #0.78
 
 #combine data tables 
 library (plyr)
