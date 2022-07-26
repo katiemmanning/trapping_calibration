@@ -128,6 +128,14 @@ distances_data<-vegdist(com.matrix_order)
 anova(betadisper(distances_data, env.matrix_order$Trap))
 #P-value = 0.006 -- cannot assume homogeneity of multivariate dispersion
 
+install.packages("devtools")
+library(devtools)
+install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
+library(pairwiseAdonis)
+citation("pairwiseAdonis")
+
+pairwise.adonis(com.matrix_order, env.matrix_order$Trap)
+
 ################
 #calculate order Abundance
 insects.abun_order <- rowSums(insects_order[,5:16])
@@ -152,7 +160,8 @@ library(lme4)
 library(lmerTest) #to obtain p values
 library (emmeans) #for pairwise comparisons
 library (multcompView) #to view letters
-library (car)
+library (car) #Anova (needed because of negative binomial)
+citation("car")
 
 #order richness
 #AIC 559
@@ -163,7 +172,7 @@ AIC(richness.model_order)
 #pairwise comparison 
 rich.emm_order<-emmeans(richness.model_order,pairwise~Trap)
 rich.emm_order
-#results: no sig diff btw any
+#results: sig diff btw all
 rich.cld_order<-multcomp::cld(rich.emm_order, alpha = 0.05, Letters = LETTERS)
 rich.cld_order
 
@@ -510,6 +519,8 @@ fit
 distances_data<-vegdist(com.matrix)
 anova(betadisper(distances_data, env.matrix$Trap))
 #P-value = .0001 -- cannot assume homogeneity of multivariate dispersion
+
+pairwise.adonis(com.matrix, env.matrix$Trap)
 
 
 ################
@@ -1074,6 +1085,7 @@ distances_data<-vegdist(com.matrix_beetle)
 anova(betadisper(distances_data, env.matrix_beetle$Trap))
 #P-value = 0.7987 --- assumes homogeneity
 
+pairwise.adonis(com.matrix_beetle, env.matrix_beetle$Trap)
 
 ################
 #calculate beetle Abundance
